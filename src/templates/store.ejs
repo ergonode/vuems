@@ -1,0 +1,13 @@
+/*
+ * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
+ */
+<%= options.store.map(({ fullname }) =>`import ${'store_' + hash(fullname)} from '${fullname.replace(/\\/g,'/')}';`).join('\n') %>
+
+export default {
+<%= options.store.map(({ fullname, path }) => {
+    const storeName = path.split('/');
+
+    return `\t\t${storeName[storeName.length - 1]}: store_${hash(fullname)},`;
+}).join('\n') %>
+};

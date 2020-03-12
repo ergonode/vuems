@@ -1,0 +1,63 @@
+{
+  "name": "@ergo/vuems",
+  "version": "0.7.0",
+  "description": "A simple mechanism to transform a monolithic Vue application into an application based on Micro Services architecture.",
+  "author": "Bletek Piotr <p.bletek@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ergonode/vuems.git"
+  },
+  "homepage": "https://github.com/ergonode/vuems",
+  "bugs": {
+    "url": "https://github.com/ergonode/vuems/issues"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint --ext .js .",
+    "lint:dev": "npm run lint -- --cache",
+    "test:dev": "npm run test -- --coverage --u --passWithNoTests",
+    "test": "npm run lint && jest --no-cache --passWithNoTests"
+  },
+  "files": [
+    "src/*"
+  ],
+  "keywords": [
+    "node",
+    "npm",
+    "vue"
+  ],
+  "dependencies": {
+    "consola": "^2.11.3",
+    "fs-extra": "^8.1.0",
+    "recursive-readdir-async": "^1.1.6"
+  },
+  "devDependencies": {
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^8.0.1",
+    "babel-jest": "^25.1.0",
+    "babel-plugin-dynamic-import-node": "^2.3.0",
+    "cross-env": "^7.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-loader": "^3.0.3",
+    "eslint-plugin-cypress": "^2.8.1",
+    "eslint-plugin-flowtype": "^4.6.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jest": "^23.6.0",
+    "eslint-plugin-notice": "^0.8.9",
+    "eslint-plugin-vue": "^6.1.2",
+    "husky": "^4.2.1",
+    "jest": "^25.1.0",
+    "jest-junit": "^10.0.0",
+    "jest-serializer-vue": "^2.0.2",
+    "jest-transform-stub": "^2.0.0",
+    "jsdom": "^16.1.0",
+    "node-sass": "^4.13.1",
+    "raw-loader": "^4.0.0",
+    "sass-loader": "^8.0.2",
+    "standard-version": "latest",
+    "stylus": "^0.54.7",
+    "stylus-loader": "^3.0.2"
+  }
+}

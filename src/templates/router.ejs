@@ -1,0 +1,9 @@
+/*
+ * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
+ */
+<%= options.router.map(({ fullname }) =>`import ${'route_' + hash(fullname)} from '${fullname.replace(/\\/g,'/')}';`).join('\n') %>
+
+export default {
+<%= options.router.map(({ fullname }) =>`\t\troute_${hash(fullname)},`).join('\n') %>
+};

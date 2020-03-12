@@ -1,0 +1,48 @@
+# dependencies
+node_modules
+report
+
+# tests
+coverage
+screenshotsFolder
+videosFolder
+cypress.env.json
+
+# logs
+npm-debug.log
+
+# Nuxt build
+.nuxt
+
+# Nuxt generate
+dist
+build
+!build/.gitkeep
+tmp
+foto
+ftp
+
+# ESLint generate
+.eslintcache
+
+###> IDE ###
+.history
+.idea
+.vscode
+.awcache
+
+
+# misc
+.DS_Store
+lerna-debug.log
+npm-debug.log
+yarn-error.log
+**/npm-debug.log
+.env
+
+# configurations
+# exclude everything
+config/*
+# exception to the rule
+!config/*.js
+!config/.copyright
