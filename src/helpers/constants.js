@@ -20,6 +20,21 @@ export const MODULE_NAME = NAME;
 export const MODULE_DESCRIPTION = DESCRIPTION;
 
 /**
+ * Default module directories
+ * @const {Object}
+ */
+export const DIRECTORIES = {
+    assests: 'assests',
+    components: 'components',
+    config: 'config',
+    layouts: 'layouts',
+    middleware: 'middleware',
+    pages: 'pages',
+    plugins: 'plugins',
+    store: 'store',
+};
+
+/**
  * Default module options
  * @const {Object}
  */
@@ -34,4 +49,5 @@ export const DEFAULTS = {
     nodeModulesDir: 'node_modules', // directory to find npm modules
     isDev: false,
     logLoadedModules: false,
+    directories: DIRECTORIES,
 };

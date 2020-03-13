@@ -4,6 +4,7 @@
  */
 import { resolve as resolvePath } from 'path';
 import { findPaths } from '../helpers/tools';
+import { DIRECTORIES } from '../helpers/constants';
 
 /**
 * Register all routers from modules
@@ -13,8 +14,13 @@ import { findPaths } from '../helpers/tools';
 * @param {Object} options.allModules - All active modules
 * @returns {Promise<string>}
 */
-async function registerRouter({ allModules }) {
-    const allRoutes = await Promise.all(findPaths({ modules: allModules, suffix: 'config', regExp: /routes\.js/ }));
+async function registerRouter({ allModules, directories }) {
+    const configDir = directories.config || DIRECTORIES.config;
+    const allRoutes = await Promise.all(findPaths({
+        modules: allModules,
+        suffix: configDir,
+        regExp: /routes\.js/,
+    }));
 
     await this.addTemplate({
         fileName: 'router.modules.js',
@@ -35,8 +41,13 @@ async function registerRouter({ allModules }) {
 * @param {Object} options.allModules - All active modules
 * @returns {Promise<string>}
 */
-async function registerExtends({ allModules }) {
-    const allExtends = await Promise.all(findPaths({ modules: allModules, suffix: 'config', regExp: /extends\.js/ }));
+async function registerExtends({ allModules, directories }) {
+    const configDir = directories.config || DIRECTORIES.config;
+    const allExtends = await Promise.all(findPaths({
+        modules: allModules,
+        suffix: configDir,
+        regExp: /extends\.js/,
+    }));
 
     await this.addTemplate({
         fileName: 'extends.modules.js',
@@ -57,8 +68,13 @@ async function registerExtends({ allModules }) {
 * @param {Object} options.allModules - All active modules
 * @returns {Promise<string>}
 */
-async function registerMiddleware({ allModules }) {
-    const allMiddleware = await Promise.all(findPaths({ modules: allModules, suffix: 'middleware', regExp: /\.global\.js/ }));
+async function registerMiddleware({ allModules, directories }) {
+    const middlewareDir = directories.middleware || DIRECTORIES.middleware;
+    const allMiddleware = await Promise.all(findPaths({
+        modules: allModules,
+        suffix: middlewareDir,
+        regExp: /\.global\.js/,
+    }));
 
     await this.addTemplate({
         fileName: 'middleware.modules.js',
@@ -79,8 +95,13 @@ async function registerMiddleware({ allModules }) {
 * @param {Object} options.allModules - All active modules
 * @returns {Promise<string>}
 */
-async function registerStore({ allModules }) {
-    const allStore = await Promise.all(findPaths({ modules: allModules, suffix: 'store', regExp: /index\.js/ }));
+async function registerStore({ allModules, directories }) {
+    const storeDir = directories.store || DIRECTORIES.store;
+    const allStore = await Promise.all(findPaths({
+        modules: allModules,
+        suffix: storeDir,
+        regExp: /index\.js/,
+    }));
 
     await this.addTemplate({
         fileName: 'store.modules.js',

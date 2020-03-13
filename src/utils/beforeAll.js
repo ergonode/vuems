@@ -5,6 +5,7 @@
 import { join } from 'path';
 import { exists, ensureDir } from 'fs-extra';
 import { prepareSymlinks, getConfigs } from '../helpers/tools';
+import { DIRECTORIES } from '../helpers/constants';
 
 /**
 * Created symlinks for npm modules
@@ -82,8 +83,9 @@ function checkRequiredModules({ allModules, required }) {
 * @param {Object} options.allModules - All active modules
 * @returns {Promise<Object[]>} All modules configurations
 */
-async function getModulesConfiguration({ allModules }) {
-    const config = await Promise.all(getConfigs({ modules: allModules, suffix: 'config/index.js' }));
+async function getModulesConfiguration({ allModules, directories }) {
+    const configDir = directories.config || DIRECTORIES.config;
+    const config = await Promise.all(getConfigs({ modules: allModules, suffix: `${configDir}/index.js` }));
 
     return config;
 }
