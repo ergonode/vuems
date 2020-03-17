@@ -1,6 +1,6 @@
 {
   "name": "@ergonode/vuems",
-  "version": "0.7.0",
+  "version": "0.7.5",
   "description": "A simple mechanism to transform a monolithic Vue application into an application based on Micro Services architecture.",
   "author": "Bletek Piotr <p.bletek@gmail.com>",
   "license": "OSL",
