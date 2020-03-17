@@ -1,9 +1,9 @@
 {
-  "name": "@ergo/vuems",
+  "name": "@ergonode/vuems",
   "version": "0.7.0",
   "description": "A simple mechanism to transform a monolithic Vue application into an application based on Micro Services architecture.",
   "author": "Bletek Piotr <p.bletek@gmail.com>",
-  "license": "MIT",
+  "license": "OSL",
   "repository": {
     "type": "git",
     "url": "git://github.com/ergonode/vuems.git"
@@ -11,6 +11,10 @@
   "homepage": "https://github.com/ergonode/vuems",
   "bugs": {
     "url": "https://github.com/ergonode/vuems/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "main": "src/index.js",
   "scripts": {
@@ -25,7 +29,9 @@
   "keywords": [
     "node",
     "npm",
-    "vue"
+    "vue",
+    "nuxt",
+    "micro services"
   ],
   "dependencies": {
     "consola": "^2.11.3",
