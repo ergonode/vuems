@@ -41,20 +41,20 @@ Advantages of VueMS:
 ## Setup
 1. Add `@ergonode/vuems` dependency to your project
 
-```bash
-npm install @ergonode/vuems
-# or
-yarn add @ergonode/vuems
-```
+  ```bash
+  npm install @ergonode/vuems
+  # or
+  yarn add @ergonode/vuems
+  ```
 
 2. Add `@ergonode/vuems` to the `buildModules` section of `nuxt.config.js`
 
-```js
-export default {
-  buildModules: [
-    ['@ergonode/vuems', { /* module options */ }]
-  ]
-}
+  ```js
+  export default {
+    buildModules: [
+      ['@ergonode/vuems', { /* module options */ }]
+    ]
+  }
 ```
 
 ### Using top level options
@@ -239,6 +239,9 @@ Module must have a `config` directory with `index.js` file. All available config
   - `plugins`: Module plugins loaded globally.
     - Type: `Array`
     - Required: `false`
+  - `relations`: Modules relations. Modules in this array are needed for proper module operation.
+    - Type: `Array`
+    - Required: `false`
   - `css`: Module css loaded globally.
     - Type: `Array`
     - Required: `false`
@@ -251,6 +254,9 @@ Module must have a `config` directory with `index.js` file. All available config
       aliases: {
           '@Core': '/',
       },
+      relations: [
+        '@test/messages',
+      ],
       plugins: [
           { ssr: true, src: './plugins/axios' },
       ],
@@ -288,7 +294,7 @@ Module must have a `config` directory with `index.js` file. All available config
 
     **Example**:
     ```js
-    // definition
+    // Definition
     const Navigation: () => import('@Notifications/components/Navigation');
 
     export default {
@@ -304,7 +310,7 @@ Module must have a `config` directory with `index.js` file. All available config
     ```
     The global `this.$getExtendedComponents()` function is used to download the component.
     ```js
-    // Use
+    // Use in other module
     <template v-for="(component, index) in extenededComponents">
         <Component
             :is="component.component"
