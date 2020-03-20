@@ -236,10 +236,10 @@ Module must have a `config` directory with `index.js` file. All available config
   - `aliases`: Module aliases needed for easy communication between modules
     - Type: `Object`
     - Required: `true` :warning:
-  - `plugins`: Module plugins loaded globally.
+  - `relations`: Modules relations. Modules in this array are needed for proper module operation.
     - Type: `Array`
     - Required: `false`
-  - `relations`: Modules relations. Modules in this array are needed for proper module operation.
+  - `plugins`: Module plugins loaded globally.
     - Type: `Array`
     - Required: `false`
   - `css`: Module css loaded globally.

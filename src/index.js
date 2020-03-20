@@ -52,5 +52,7 @@ export default async function VueMS(moduleOptions = {}) {
         ...afterAllMessages,
     };
 
-    log(messages);
+    if (options.logProcess) {
+        log(messages);
+    }
 }

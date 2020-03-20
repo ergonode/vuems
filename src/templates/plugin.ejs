@@ -3,15 +3,26 @@
  * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
  * See LICENSE for license details.
  */
-import Vue from 'vue'; // eslint-disable-line import/no-extraneous-dependencies
 import extendsModules from '~/.nuxt/extends.modules';
+import storeModules from '~/.nuxt/store.modules';
 
-const ModuleLoader = {
-    install(_Vue) {
-        const extendComponents = Object.values(extendsModules)
-            .reduce((acc, current) => ({ ...acc, ...current.extendComponents || {} }), {});
+export default ({ app }, inject) => {
+    const extendComponents = Object.values(extendsModules)
+        .reduce((acc, current) => ({ ...acc, ...current.extendComponents || {} }), {});
 
-        _Vue.prototype.$getExtendedComponents = type => extendComponents[type];
-    },
+    inject('getExtendedComponents', type => extendComponents[type]);
+
+    app.store.registerModule('index', {
+        actions: {
+            resetState({ dispatch }) {
+                Object.keys(storeModules).forEach((storeName) => {
+                    dispatch(`${storeName}/clearStorage`);
+                });
+            },
+        },
+    });
+
+    Object.keys(storeModules).forEach((storeName) => {
+        app.store.registerModule(storeName, storeModules[storeName]);
+    });
 };
-Vue.use(ModuleLoader);

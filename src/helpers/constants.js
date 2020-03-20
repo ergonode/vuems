@@ -49,5 +49,6 @@ export const DEFAULTS = {
     nodeModulesDir: 'node_modules', // directory to find npm modules
     isDev: false,
     logLoadedModules: false,
+    logProcess: true,
     directories: DIRECTORIES,
 };

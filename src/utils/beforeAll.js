@@ -139,6 +139,59 @@ async function setAliases(configurations, { allModules }) {
 }
 
 /**
+* Set plugins for modules
+* @function setPlugins
+* @param {Object[]} configurations - All modules configurations
+* @param {Object} options - Module options
+* @param {string} options.allModules - All active modules
+* @returns {Promise<string>}
+*/
+async function setPlugins(configurations, { allModules }) {
+    return new Promise((resolve) => {
+        configurations.forEach((configuration) => {
+            if (configuration.plugins) {
+                const { name, plugins } = configuration;
+                const moduleName = name.replace(/[^a-zA-Z]/g, '');
+
+                plugins.forEach(async ({ ssr, src }) => {
+                    const pluginPath = join(allModules.find(m => m.name === name).path, src).replace(/\/$/g, '');
+
+                    await this.addPlugin({
+                        src: `${pluginPath}.js`,
+                        fileName: join('modules', moduleName, `${src}.js`),
+                        ssr,
+                    });
+                });
+            }
+        });
+        resolve('All plugins css set');
+    });
+}
+
+/**
+* Set global css for modules
+* @function setCss
+* @param {Object[]} configurations - All modules configurations
+* @param {Object} options - Module options
+* @param {string} options.allModules - All active modules
+* @returns {Promise<string>}
+*/
+function setCss(configurations, { allModules }) {
+    return new Promise((resolve) => {
+        configurations.forEach((configuration) => {
+            if (configuration.css) {
+                const { name, css } = configuration;
+
+                css.forEach((style) => {
+                    this.options.css.push(join(allModules.find(m => m.name === name).path, style).replace(/\/$/g, ''));
+                });
+            }
+        });
+        resolve('All global css set');
+    });
+}
+
+/**
 * Run actions before any modules are loaded
 * @function beforeAllModule
 * @param {Object} moduleOptions - Module options
@@ -156,6 +209,8 @@ export default async function beforeAllModule(moduleOptions) {
 
     message.checkModulesRelations = await checkModulesRelations(modulesConfigs);
     message.setAliases = await setAliases.call(this, modulesConfigs, moduleOptions);
+    message.setPlugins = await setPlugins.call(this, modulesConfigs, moduleOptions);
+    message.setCss = await setCss.call(this, modulesConfigs, moduleOptions);
 
     return message;
 }

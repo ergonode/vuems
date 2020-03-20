@@ -46,3 +46,5 @@ config/*
 # exception to the rule
 !config/*.js
 !config/.copyright
+.huskyrc
+.npmrc
