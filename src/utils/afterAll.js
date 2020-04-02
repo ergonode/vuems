@@ -3,7 +3,7 @@
  * See LICENSE for license details.
  */
 import { resolve as resolvePath } from 'path';
-import { findPaths } from '../helpers/tools';
+import { findPaths, flattenDeep } from '../helpers/tools';
 import { DIRECTORIES } from '../helpers/constants';
 
 /**
@@ -26,7 +26,7 @@ async function registerRouter({ allModules, directories }) {
         fileName: 'router.modules.js',
         src: resolvePath(__dirname, '../templates/router.ejs'),
         options: {
-            router: allRoutes.flat(),
+            router: flattenDeep(allRoutes),
         },
     });
 
@@ -53,7 +53,7 @@ async function registerExtends({ allModules, directories }) {
         fileName: 'extends.modules.js',
         src: resolvePath(__dirname, '../templates/extends.ejs'),
         options: {
-            extend: allExtends.filter(m => m !== null).flat(),
+            extend: flattenDeep(allExtends.filter(m => m !== null)),
         },
     });
 
@@ -80,7 +80,7 @@ async function registerMiddleware({ allModules, directories }) {
         fileName: 'middleware.modules.js',
         src: resolvePath(__dirname, '../templates/middleware.ejs'),
         options: {
-            middleware: allMiddleware.filter(m => m !== null).flat(),
+            middleware: flattenDeep(allMiddleware.filter(m => m !== null)),
         },
     });
 
@@ -107,7 +107,7 @@ async function registerStore({ allModules, directories }) {
         fileName: 'store.modules.js',
         src: resolvePath(__dirname, '../templates/store.ejs'),
         options: {
-            store: allStore.filter(m => m !== null).flat(),
+            store: flattenDeep(allStore.filter(m => m !== null)),
         },
     });
 

@@ -115,3 +115,16 @@ export function getConfigs({ modules, suffix }) {
         throw Error(`Module [${name}] configuration file does not exist.`);
     });
 }
+
+/**
+* Flat array
+* @function flattenDeep
+* @param {Object[]} arr -  Array to flatten
+* @returns {Object[]}
+*/
+export function flattenDeep(arr) {
+    return arr.reduce((acc, val) => (Array.isArray(val)
+        ? acc.concat(flattenDeep(val))
+        : acc.concat(val)
+    ), []);
+}
