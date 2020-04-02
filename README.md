@@ -120,6 +120,13 @@ Is development mode on.
 
 Log all loaded modules.
 
+### `logProcess`
+
+- Type: `Boolean`
+- Default: `true`
+
+Log module process.
+
 ### `directories`
 
 - Type: `Object`
