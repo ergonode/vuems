@@ -12,6 +12,8 @@ export default ({ app }, inject) => {
 
     inject('getExtendedComponents', type => extendComponents[type]);
 
+    // TODO: Add clear state
+
     app.store.registerModule('index', {
         actions: {
             resetState({ dispatch }) {
@@ -23,6 +25,11 @@ export default ({ app }, inject) => {
     });
 
     Object.keys(storeModules).forEach((storeName) => {
-        app.store.registerModule(storeName, storeModules[storeName]);
+        const moduleIsRegistered = app.store._modules.root._children[storeName] !== undefined;
+        const stateExists = store.state[storeName];
+
+        if (!moduleIsRegistered) {
+            app.store.registerModule(storeName, storeModules[storeName]);
+        }
     });
 };

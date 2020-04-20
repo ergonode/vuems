@@ -133,7 +133,7 @@ Log module process.
 - Default:
 ```
 {
-    assests: 'assests',
+    assets: 'assets',
     components: 'components',
     config: 'config',
     layouts: 'layouts',

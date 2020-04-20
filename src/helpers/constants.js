@@ -24,7 +24,7 @@ export const MODULE_DESCRIPTION = DESCRIPTION;
  * @const {Object}
  */
 export const DIRECTORIES = {
-    assests: 'assests',
+    assets: 'assets',
     components: 'components',
     config: 'config',
     layouts: 'layouts',

@@ -85,10 +85,8 @@ export function prepareSymlinks({ npmModules, vendorDir, nodeModulesDir }) {
             await ensureSymlink(src, dst, 'junction');
             const files = await recursive.list(dst);
 
-            await Promise.all(files.map(async ({ fullname }) => {
-                const filesToRead = await chmod(fullname, 0o444); // files only to read
-
-                return filesToRead;
+            await Promise.all(files.map(({ fullname }) => {
+                return chmod(fullname, 0o444); // files only to read
             }));
         }
     });
