@@ -5,5 +5,5 @@
 <%= options.middleware.map(({ fullname }) =>`import ${'middleware_' + hash(fullname)} from '${fullname.replace(/\\/g,'/')}';`).join('\n') %>
 
 export default (ctx) => {
-<%= options.middleware.map(({ fullname }) =>`\t\tmiddleware_${hash(fullname)}(ctx);`).join('\n') %>
+<%= options.middleware.map(({ fullname }) =>`\tmiddleware_${hash(fullname)}(ctx);`).join('\n') %>
 };

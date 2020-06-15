@@ -5,5 +5,5 @@
 <%= options.extend.map(({ fullname }) =>`import ${'extend_' + hash(fullname)} from '${fullname.replace(/\\/g,'/')}';`).join('\n') %>
 
 export default {
-<%= options.extend.map(({ fullname }) =>`\t\textend_${hash(fullname)},`).join('\n') %>
+<%= options.extend.map(({ fullname }) =>`\textend_${hash(fullname)},`).join('\n') %>
 };

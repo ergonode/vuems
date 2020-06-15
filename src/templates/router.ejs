@@ -5,5 +5,5 @@
 <%= options.router.map(({ fullname }) =>`import ${'route_' + hash(fullname)} from '${fullname.replace(/\\/g,'/')}';`).join('\n') %>
 
 export default {
-<%= options.router.map(({ fullname }) =>`\t\troute_${hash(fullname)},`).join('\n') %>
+<%= options.router.map(({ fullname }) =>`\troute_${hash(fullname)},`).join('\n') %>
 };

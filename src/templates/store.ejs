@@ -8,6 +8,6 @@ export default {
 <%= options.store.map(({ fullname, path }) => {
     const storeName = path.split('/');
 
-    return `\t\t${storeName[storeName.length - 1]}: store_${hash(fullname)},`;
+    return `\t${storeName[storeName.length - 1]}: store_${hash(fullname)},`;
 }).join('\n') %>
 };
