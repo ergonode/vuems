@@ -5,20 +5,22 @@
  */
 import extendsModules from '~/.nuxt/extends.modules';
 import storeModules from '~/.nuxt/store.modules';
+import deepmerge from 'deepmerge';
 
 export default ({ app }, inject) => {
     const extendComponents = Object.values(extendsModules)
-        .reduce((acc, current) => ({ ...acc, ...current.extendComponents || {} }), {});
+        .reduce((acc, current) => deepmerge(acc, current.extendComponents || {}), {});
 
     inject('getExtendedComponents', type => extendComponents[type]);
-
-    // TODO: Add clear state
 
     app.store.registerModule('index', {
         actions: {
             resetState({ dispatch }) {
                 Object.keys(storeModules).forEach((storeName) => {
-                    dispatch(`${storeName}/clearStorage`);
+                    if (app.store._actions[`${storeName}/clearStorage`]
+                            && app.store._actions[`${storeName}/clearStorage`].length) {
+                        dispatch(`${storeName}/clearStorage`);
+                    }
                 });
             },
         },
@@ -26,10 +28,10 @@ export default ({ app }, inject) => {
 
     Object.keys(storeModules).forEach((storeName) => {
         const moduleIsRegistered = app.store._modules.root._children[storeName] !== undefined;
-        const stateExists = store.state[storeName];
+        const stateExists = app.store.state[storeName];
 
         if (!moduleIsRegistered) {
-            app.store.registerModule(storeName, storeModules[storeName]);
+            app.store.registerModule(storeName, storeModules[storeName], { preserveState: stateExists });
         }
     });
 };

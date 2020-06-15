@@ -4,11 +4,11 @@
  */
 import { resolve, join } from 'path';
 import { info } from 'consola';
+import { log } from './helpers/log';
+import { DEFAULTS } from './helpers/constants';
 import beforeAll from './utils/beforeAll';
 import initModules from './utils/initModules';
 import afterAll from './utils/afterAll';
-import { log } from './helpers/log';
-import { DEFAULTS } from './helpers/constants';
 
 /**
  * A simple mechanism to transform a monolithic Vue application into an application based on Micro Services architecture.

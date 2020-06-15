@@ -3,7 +3,7 @@
  * See LICENSE for license details.
  */
 import { join } from 'path';
-import { exists, ensureDir } from 'fs-extra';
+import { existsSync, ensureDir } from 'fs-extra';
 import { prepareSymlinks, getConfigs } from '../helpers/tools';
 import { DIRECTORIES } from '../helpers/constants';
 
@@ -42,8 +42,8 @@ async function symlinksCreator({
 * @returns {Promise<string>}
 */
 async function checkDirectories({ modules, modulesDir, vendorDir }) {
-    const isModuleDir = await exists(modulesDir);
-    const isVendorDir = await exists(vendorDir);
+    const isModuleDir = existsSync(modulesDir);
+    const isVendorDir = existsSync(vendorDir);
 
     if (modules.local && modules.local.length && !isModuleDir) {
         throw Error(`Local modules directory [${modulesDir}] does not exist.`);
@@ -83,11 +83,10 @@ function checkRequiredModules({ allModules, required }) {
 * @param {Object} options.allModules - All active modules
 * @returns {Promise<Object[]>} All modules configurations
 */
-async function getModulesConfiguration({ allModules, directories }) {
+function getModulesConfiguration({ allModules, directories }) {
     const configDir = directories.config || DIRECTORIES.config;
-    const config = await Promise.all(getConfigs({ modules: allModules, suffix: `${configDir}/index.js` }));
 
-    return config;
+    return Promise.all(getConfigs({ modules: allModules, suffix: `${configDir}/index.js` }));
 }
 
 /**
