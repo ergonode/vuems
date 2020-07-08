@@ -3,6 +3,7 @@
  * See LICENSE for license details.
  */
 import { resolve, join } from 'path';
+import { existsSync } from 'fs-extra';
 import { info } from 'consola';
 import { log } from './helpers/log';
 import { DEFAULTS } from './helpers/constants';
@@ -32,13 +33,29 @@ export default async function VueMS(moduleOptions = {}) {
 
     if (options.modules.npm) {
         npmModules = options.modules.npm.map(module => ({
-            name: module, type: 'npm', path: join(options.vendorDir, module, 'src'),
+            name: module,
+            type: 'npm',
+            path: join(options.vendorDir, module, 'src'),
         }));
     }
     if (options.modules.local) {
-        localModules = options.modules.local.map(module => ({
-            name: module, type: 'local', path: join(options.modulesDir, module),
-        }));
+        localModules = options.modules.local.map((module) => {
+            const path = join(options.modulesDir, module, 'src');
+
+            if (existsSync(path)) {
+                return {
+                    name: module,
+                    type: 'local',
+                    path,
+                };
+            }
+
+            return {
+                name: module,
+                type: 'local',
+                path: join(options.modulesDir, module),
+            };
+        });
     }
 
     options.allModules = [...localModules, ...npmModules];
