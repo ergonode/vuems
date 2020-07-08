@@ -1,9 +1,14 @@
+<p align="center">
+  <a href="https://www.npmjs.com/package/@ergonode/vuems" rel="noopener noreferrer">
+    <img width="300" src="logo.png" alt="VueMS logo">
+  </a>
+</p>
 <h1 align="center">Vue Micro Services</h1>
 <p align="center">
-  <a href="https://github.com/ergonode/vuems">
-    <img alt="npm" src="https://img.shields.io/npm/v/@ergonode/vuems">
+  <a href="https://www.npmjs.com/package/@ergonode/vuems">
+    <img alt="NPM" src="https://img.shields.io/npm/v/@ergonode/vuems">
   </a>
-  <a href="https://github.com/ergonode/vuems">
+  <a href="https://www.npmjs.com/package/@ergonode/vuems">
     <img alt="NPM" src="https://img.shields.io/npm/l/@ergonode/vuems">
   </a>
 </p>
@@ -236,15 +241,14 @@ Module must have a `config` directory with `index.js` file. All available config
   - `name`: Module name
     - Type: `String`
     - Required: `true` :warning:
-  - `type`: Module type
-    - Type: `String`
-    - Required: `true` :warning:
-    - Options: `local | npm`
   - `aliases`: Module aliases needed for easy communication between modules
     - Type: `Object`
     - Required: `true` :warning:
   - `relations`: Modules relations. Modules in this array are needed for proper module operation.
     - Type: `Array`
+    - Required: `false`
+  - `replacements`: Component replacements. Replace any component from any module with your own.
+    - Type: `Object`
     - Required: `false`
   - `plugins`: Module plugins loaded globally.
     - Type: `Array`
@@ -257,9 +261,11 @@ Module must have a `config` directory with `index.js` file. All available config
   ```js
   export default {
       name: '@test/core',
-      type: 'local',
       aliases: {
           '@Core': '/',
+      },
+      replacements: {
+        '@Core/components/coreComponent': '/components/myComponent',
       },
       relations: [
         '@test/messages',
@@ -355,6 +361,22 @@ Module must have a `config` directory with `index.js` file. All available config
             ],
           }
       ];
+    }
+    ```
+  - `dictionaries`: You can extend dictionaries.
+    - Type: `Array`
+    - Required: `false`
+
+    **Example**:
+    ```js
+    export default {
+        dictionaries: [
+            {
+                stateProp: 'currencies',
+                dataFormat: {},
+                requestPath: '/dictionary/currencies',
+            },
+        ]
     }
     ```
 

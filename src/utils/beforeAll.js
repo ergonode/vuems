@@ -41,18 +41,19 @@ async function symlinksCreator({
 * @throws {string} Will throw an error if required main directories not exist
 * @returns {Promise<string>}
 */
-async function checkDirectories({ modules, modulesDir, vendorDir }) {
-    const isModuleDir = existsSync(modulesDir);
-    const isVendorDir = existsSync(vendorDir);
+function checkDirectories({ modules, modulesDir, vendorDir }) {
+    return new Promise((resolve, reject) => {
+        const isModuleDir = existsSync(modulesDir);
+        const isVendorDir = existsSync(vendorDir);
 
-    if (modules.local && modules.local.length && !isModuleDir) {
-        throw Error(`Local modules directory [${modulesDir}] does not exist.`);
-    }
-    if (modules.npm && modules.npm.length && !isVendorDir) {
-        throw Error(`Vendor directory [${vendorDir}] does not exist.`);
-    }
-
-    return 'Directories checked';
+        if (modules.local && modules.local.length && !isModuleDir) {
+            reject(new Error(`Local modules directory [${modulesDir}] does not exist.`));
+        }
+        if (modules.npm && modules.npm.length && !isVendorDir) {
+            reject(new Error(`Vendor directory [${vendorDir}] does not exist.`));
+        }
+        resolve('Directories checked');
+    });
 }
 
 /**
@@ -124,11 +125,21 @@ async function setAliases(configurations, { allModules }) {
         const alias = config.resolve.alias || {};
 
         configurations.forEach((configuration) => {
+            const { name } = configuration;
+
             if (configuration.aliases) {
-                const { name, aliases } = configuration;
+                const { aliases } = configuration;
 
                 Object.keys(aliases).forEach((key) => {
                     alias[key] = join(allModules.find(m => m.name === name).path, aliases[key]).replace(/\/$/g, '');
+                });
+            }
+
+            if (configuration.replacements) {
+                const { replacements } = configuration;
+
+                Object.keys(replacements).forEach((key) => {
+                    alias[key] = join(allModules.find(m => m.name === name).path, replacements[key]).replace(/\/$/g, '');
                 });
             }
         });
