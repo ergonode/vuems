@@ -4,34 +4,11 @@
  * See LICENSE for license details.
  */
 import extendsModules from '~/.nuxt/extends.modules';
-import storeModules from '~/.nuxt/store.modules';
 import deepmerge from 'deepmerge';
 
-export default ({ app }, inject) => {
+export default async ({ app }, inject) => {
     const extendComponents = Object.values(extendsModules)
         .reduce((acc, current) => deepmerge(acc, current.extendComponents || {}), {});
 
     inject('getExtendedComponents', type => extendComponents[type]);
-
-    app.store.registerModule('index', {
-        actions: {
-            resetState({ dispatch }) {
-                Object.keys(storeModules).forEach((storeName) => {
-                    if (app.store._actions[`${storeName}/clearStorage`]
-                            && app.store._actions[`${storeName}/clearStorage`].length) {
-                        dispatch(`${storeName}/clearStorage`);
-                    }
-                });
-            },
-        },
-    });
-
-    Object.keys(storeModules).forEach((storeName) => {
-        const moduleIsRegistered = app.store._modules.root._children[storeName] !== undefined;
-        const stateExists = app.store.state[storeName];
-
-        if (!moduleIsRegistered) {
-            app.store.registerModule(storeName, storeModules[storeName], { preserveState: stateExists });
-        }
-    });
 };

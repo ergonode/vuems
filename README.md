@@ -111,6 +111,13 @@ Npm modules directory name. Directory is temporary and used by symbolic link.
 
 Directory where installed npm modules are to be found.
 
+### `vuex`
+
+- Type: `Boolean`
+- Default: `true`
+
+If Vuex library is used.
+
 ### `isDev`
 
 - Type: `Boolean`

@@ -1,0 +1,107 @@
+/* eslint-disable no-param-reassign */
+/*
+ * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
+ */
+import extendsModules from '~/.nuxt/extends.modules';
+import storeModules from '~/.nuxt/store.modules';
+import deepmerge from 'deepmerge';
+
+export default async ({ app }, inject) => {
+    const storesForExtend = {};
+    const asyncForEach = async (array, callback) => {
+        for (let index = 0; index < array.length; index++) {
+            await callback(array[index], index, array)
+        }
+    }
+
+    await asyncForEach(Object.values(extendsModules), async (extendContent) => {
+        if(extendContent.extendStore) {
+            await asyncForEach(Object.keys(extendContent.extendStore), async (extendName) => {
+                const tmpStore = {};
+                const storeContent = await extendContent.extendStore[extendName]();
+
+                if(storeContent.state) {
+                    tmpStore['state'] = storeContent.state();
+                }
+                if(storeContent.actions) {
+                    tmpStore['actions'] = storeContent.actions;
+                }
+                if(storeContent.mutations) {
+                    tmpStore['mutations'] = storeContent.mutations;
+                }
+                if(storeContent.getters) {
+                    tmpStore['getters'] = storeContent.getters;
+                }
+
+                storesForExtend[extendName] = deepmerge(storesForExtend[extendName] || {}, tmpStore);
+            });
+        }
+    });
+
+    app.store.registerModule('index', {
+        actions: {
+            resetState({ dispatch }) {
+                Object.keys(storeModules).forEach((storeName) => {
+                    if (app.store._actions[`${storeName}/__clearStorage`]
+                            && app.store._actions[`${storeName}/__clearStorage`].length) {
+                        dispatch(`${storeName}/__clearStorage`);
+                    }
+                });
+            },
+        },
+    });
+
+    Object.keys(storeModules).forEach((storeName) => {
+        const moduleIsRegistered = app.store._modules.root._children[storeName] !== undefined;
+        const stateExists = app.store.state[storeName];
+        const states = storeModules[storeName].state();
+
+        if(!storeModules[storeName].mutations) {
+            storeModules[storeName].mutations = {};
+        }
+        if(!storeModules[storeName].actions) {
+            storeModules[storeName].actions = {};
+        }
+
+        if(storesForExtend[storeName]) {
+            if(storesForExtend[storeName].state) {
+                storeModules[storeName].state = () => deepmerge(states || {}, storesForExtend[storeName].state);
+            }
+            if(storesForExtend[storeName].mutations) {
+                storeModules[storeName].mutations = deepmerge(storeModules[storeName].mutations || {}, storesForExtend[storeName].mutations);
+            }
+            if(storesForExtend[storeName].actions) {
+                storeModules[storeName].actions = deepmerge(storeModules[storeName].actions || {}, storesForExtend[storeName].actions);
+            }
+            if(storesForExtend[storeName].getters) {
+                storeModules[storeName].getters = deepmerge(storeModules[storeName].getters || {}, storesForExtend[storeName].getters);
+            }
+        }
+
+        // DEFAULT VUEX METHODS
+        // MUTATIONS
+        storeModules[storeName].mutations['__CLEAR_STORAGE'] = function __CLEAR_STORAGE(state) {
+            Object.keys(states).forEach((key) => {
+                state[key] = states[key];
+            });
+        }
+        storeModules[storeName].mutations['__SET_STATE'] = function __SET_STATE(state, {
+            key, value,
+        }) {
+            state[key] = value;
+        }
+
+        // ACTIONS
+        storeModules[storeName].actions['__clearStorage'] = function __clearStorage({ commit }) {
+            commit('__CLEAR_STORAGE');
+        }
+        storeModules[storeName].actions['__setState'] = function __setState({ commit }, payload) {
+            commit('__SET_STATE', payload);
+        }
+
+        if (!moduleIsRegistered) {
+            app.store.registerModule(storeName, storeModules[storeName], { preserveState: stateExists });
+        }
+    });
+};
