@@ -1,14 +1,41 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-await-in-loop */
 /*
  * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
  * See LICENSE for license details.
  */
-import extendsModules from '~/.nuxt/extends.modules';
 import deepmerge from 'deepmerge';
+import extendsModules from '~/.nuxt/extends.modules';
 
-export default async ({ app }, inject) => {
+export default ({ app }, inject) => {
+    const extendMethods = {};
+    const hash = () => Math
+        .random()
+        .toString(36)
+        .substring(2, 15) + Math.random()
+        .toString(36)
+        .substring(2, 15);
     const extendComponents = Object.values(extendsModules)
         .reduce((acc, current) => deepmerge(acc, current.extendComponents || {}), {});
 
+    Object.values(extendsModules).forEach((extendContent) => {
+        if (extendContent.extendMethods) {
+            Object.keys(extendContent.extendMethods).forEach((extendName) => {
+                if (!extendMethods[extendName]) {
+                    extendMethods[extendName] = [
+                        extendContent.extendMethods[extendName],
+                    ];
+                } else {
+                    extendMethods[extendName].push(extendContent.extendMethods[extendName]);
+                }
+            });
+        }
+    });
+
     inject('getExtendedComponents', type => extendComponents[type]);
+    inject('extendMethods', (type, payload) => {
+        extendMethods[type].forEach((method) => {
+            method(payload);
+        });
+    });
 };

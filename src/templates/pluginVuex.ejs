@@ -1,40 +1,43 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable no-await-in-loop */
 /*
  * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
  * See LICENSE for license details.
  */
+import deepmerge from 'deepmerge';
 import extendsModules from '~/.nuxt/extends.modules';
 import storeModules from '~/.nuxt/store.modules';
-import deepmerge from 'deepmerge';
 
-export default async ({ app }, inject) => {
+export default async ({ app }) => {
     const storesForExtend = {};
     const asyncForEach = async (array, callback) => {
-        for (let index = 0; index < array.length; index++) {
-            await callback(array[index], index, array)
+        for (let index = 0; index < array.length; index += 1) {
+            await callback(array[index], index, array);
         }
-    }
+    };
 
     await asyncForEach(Object.values(extendsModules), async (extendContent) => {
-        if(extendContent.extendStore) {
+        if (extendContent.extendStore) {
             await asyncForEach(Object.keys(extendContent.extendStore), async (extendName) => {
                 const tmpStore = {};
                 const storeContent = await extendContent.extendStore[extendName]();
 
-                if(storeContent.state) {
-                    tmpStore['state'] = storeContent.state();
+                if (storeContent.state) {
+                    tmpStore.state = storeContent.state();
                 }
-                if(storeContent.actions) {
-                    tmpStore['actions'] = storeContent.actions;
+                if (storeContent.actions) {
+                    tmpStore.actions = storeContent.actions;
                 }
-                if(storeContent.mutations) {
-                    tmpStore['mutations'] = storeContent.mutations;
+                if (storeContent.mutations) {
+                    tmpStore.mutations = storeContent.mutations;
                 }
-                if(storeContent.getters) {
-                    tmpStore['getters'] = storeContent.getters;
+                if (storeContent.getters) {
+                    tmpStore.getters = storeContent.getters;
                 }
 
-                storesForExtend[extendName] = deepmerge(storesForExtend[extendName] || {}, tmpStore);
+                storesForExtend[extendName] = deepmerge(
+                    storesForExtend[extendName] || {},
+                    tmpStore,
+                );
             });
         }
     });
@@ -55,53 +58,70 @@ export default async ({ app }, inject) => {
     Object.keys(storeModules).forEach((storeName) => {
         const moduleIsRegistered = app.store._modules.root._children[storeName] !== undefined;
         const stateExists = app.store.state[storeName];
-        const states = storeModules[storeName].state();
+        let states = storeModules[storeName].state();
 
-        if(!storeModules[storeName].mutations) {
+        if (!storeModules[storeName].mutations) {
             storeModules[storeName].mutations = {};
         }
-        if(!storeModules[storeName].actions) {
+        if (!storeModules[storeName].actions) {
             storeModules[storeName].actions = {};
         }
 
-        if(storesForExtend[storeName]) {
-            if(storesForExtend[storeName].state) {
-                storeModules[storeName].state = () => deepmerge(states || {}, storesForExtend[storeName].state);
+        if (storesForExtend[storeName]) {
+            if (storesForExtend[storeName].state) {
+                states = deepmerge(
+                    states || {},
+                    storesForExtend[storeName].state,
+                );
+                storeModules[storeName].state = () => states;
             }
-            if(storesForExtend[storeName].mutations) {
-                storeModules[storeName].mutations = deepmerge(storeModules[storeName].mutations || {}, storesForExtend[storeName].mutations);
+            if (storesForExtend[storeName].mutations) {
+                storeModules[storeName].mutations = deepmerge(
+                    storeModules[storeName].mutations || {},
+                    storesForExtend[storeName].mutations,
+                );
             }
-            if(storesForExtend[storeName].actions) {
-                storeModules[storeName].actions = deepmerge(storeModules[storeName].actions || {}, storesForExtend[storeName].actions);
+            if (storesForExtend[storeName].actions) {
+                storeModules[storeName].actions = deepmerge(
+                    storeModules[storeName].actions || {},
+                    storesForExtend[storeName].actions,
+                );
             }
-            if(storesForExtend[storeName].getters) {
-                storeModules[storeName].getters = deepmerge(storeModules[storeName].getters || {}, storesForExtend[storeName].getters);
+            if (storesForExtend[storeName].getters) {
+                storeModules[storeName].getters = deepmerge(
+                    storeModules[storeName].getters || {},
+                    storesForExtend[storeName].getters,
+                );
             }
         }
 
         // DEFAULT VUEX METHODS
         // MUTATIONS
-        storeModules[storeName].mutations['__CLEAR_STORAGE'] = function __CLEAR_STORAGE(state) {
+        storeModules[storeName].mutations.__CLEAR_STORAGE = function __CLEAR_STORAGE(state) {
             Object.keys(states).forEach((key) => {
                 state[key] = states[key];
             });
-        }
-        storeModules[storeName].mutations['__SET_STATE'] = function __SET_STATE(state, {
+        };
+        storeModules[storeName].mutations.__SET_STATE = function __SET_STATE(state, {
             key, value,
         }) {
             state[key] = value;
-        }
+        };
 
         // ACTIONS
-        storeModules[storeName].actions['__clearStorage'] = function __clearStorage({ commit }) {
+        storeModules[storeName].actions.__clearStorage = function __clearStorage({ commit }) {
             commit('__CLEAR_STORAGE');
-        }
-        storeModules[storeName].actions['__setState'] = function __setState({ commit }, payload) {
+        };
+        storeModules[storeName].actions.__setState = function __setState({ commit }, payload) {
             commit('__SET_STATE', payload);
-        }
+        };
 
         if (!moduleIsRegistered) {
-            app.store.registerModule(storeName, storeModules[storeName], { preserveState: stateExists });
+            app.store.registerModule(
+                storeName,
+                storeModules[storeName],
+                { preserveState: stateExists },
+            );
         }
     });
 };
