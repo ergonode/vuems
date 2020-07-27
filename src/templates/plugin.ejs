@@ -1,37 +1,41 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-await-in-loop */
 /*
  * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
  * See LICENSE for license details.
  */
-import extendsModules from '~/.nuxt/extends.modules';
-import storeModules from '~/.nuxt/store.modules';
 import deepmerge from 'deepmerge';
+import extendsModules from '~/.nuxt/extends.modules';
 
 export default ({ app }, inject) => {
+    const extendMethods = {};
+    const hash = () => Math
+        .random()
+        .toString(36)
+        .substring(2, 15) + Math.random()
+        .toString(36)
+        .substring(2, 15);
     const extendComponents = Object.values(extendsModules)
         .reduce((acc, current) => deepmerge(acc, current.extendComponents || {}), {});
 
-    inject('getExtendedComponents', type => extendComponents[type]);
-
-    app.store.registerModule('index', {
-        actions: {
-            resetState({ dispatch }) {
-                Object.keys(storeModules).forEach((storeName) => {
-                    if (app.store._actions[`${storeName}/clearStorage`]
-                            && app.store._actions[`${storeName}/clearStorage`].length) {
-                        dispatch(`${storeName}/clearStorage`);
-                    }
-                });
-            },
-        },
+    Object.values(extendsModules).forEach((extendContent) => {
+        if (extendContent.extendMethods) {
+            Object.keys(extendContent.extendMethods).forEach((extendName) => {
+                if (!extendMethods[extendName]) {
+                    extendMethods[extendName] = [
+                        extendContent.extendMethods[extendName],
+                    ];
+                } else {
+                    extendMethods[extendName].push(extendContent.extendMethods[extendName]);
+                }
+            });
+        }
     });
 
-    Object.keys(storeModules).forEach((storeName) => {
-        const moduleIsRegistered = app.store._modules.root._children[storeName] !== undefined;
-        const stateExists = app.store.state[storeName];
-
-        if (!moduleIsRegistered) {
-            app.store.registerModule(storeName, storeModules[storeName], { preserveState: stateExists });
-        }
+    inject('getExtendedComponents', type => extendComponents[type]);
+    inject('extendMethods', (type, payload) => {
+        extendMethods[type].forEach((method) => {
+            method(payload);
+        });
     });
 };

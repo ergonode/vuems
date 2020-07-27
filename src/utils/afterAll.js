@@ -117,16 +117,22 @@ async function registerStore({ allModules, directories }) {
 /**
 * Register main plugin with extensions
 * @async
-* @function registerPlugin
+* @function registerPlugins
 * @returns {Promise<string>}
 */
-async function registerPlugin() {
+async function registerPlugins({ vuex }) {
     await this.addPlugin({
         fileName: 'plugin.modules.js',
         src: resolvePath(__dirname, '../templates/plugin.ejs'),
     });
+    if (vuex) {
+        await this.addPlugin({
+            fileName: 'pluginVuex.modules.js',
+            src: resolvePath(__dirname, '../templates/pluginVuex.ejs'),
+        });
+    }
 
-    return 'Plugin registered';
+    return 'Plugins registered';
 }
 
 /**
@@ -141,8 +147,10 @@ export default async function afterAllModule(moduleOptions) {
     message.registerRouter = await registerRouter.call(this, moduleOptions);
     message.registerExtends = await registerExtends.call(this, moduleOptions);
     message.registerMiddleware = await registerMiddleware.call(this, moduleOptions);
-    message.registerStore = await registerStore.call(this, moduleOptions);
-    message.registerPlugin = await registerPlugin.call(this);
+    if (moduleOptions.vuex) {
+        message.registerStore = await registerStore.call(this, moduleOptions);
+    }
+    message.registerPlugins = await registerPlugins.call(this, moduleOptions);
 
     return message;
 }

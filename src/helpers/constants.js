@@ -47,6 +47,7 @@ export const DEFAULTS = {
     modulesDir: 'modules', // local modules directory
     vendorDir: 'vendor', // tmp npm modules directory (symlinks)
     nodeModulesDir: 'node_modules', // directory to find npm modules
+    vuex: true, // set 'true' if VUEX is implemented in the project
     isDev: false,
     logLoadedModules: false,
     logProcess: true,
