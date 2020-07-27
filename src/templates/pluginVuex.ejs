@@ -8,7 +8,13 @@ import extendsModules from '~/.nuxt/extends.modules';
 import storeModules from '~/.nuxt/store.modules';
 
 export default async ({ app }) => {
-    const storesForExtend = {};
+    const storeKeys = {
+        state: true,
+        actions: true,
+        mutations: true,
+        getters: true,
+    };
+    const extendedStore = {};
     const asyncForEach = async (array, callback) => {
         for (let index = 0; index < array.length; index += 1) {
             await callback(array[index], index, array);
@@ -21,21 +27,18 @@ export default async ({ app }) => {
                 const tmpStore = {};
                 const storeContent = await extendContent.extendStore[extendName]();
 
-                if (storeContent.state) {
-                    tmpStore.state = storeContent.state();
-                }
-                if (storeContent.actions) {
-                    tmpStore.actions = storeContent.actions;
-                }
-                if (storeContent.mutations) {
-                    tmpStore.mutations = storeContent.mutations;
-                }
-                if (storeContent.getters) {
-                    tmpStore.getters = storeContent.getters;
-                }
+                Object.keys(storeKeys).forEach((key) => {
+                    if (storeContent[key]) {
+                        if (key === 'state') {
+                            tmpStore[key] = storeContent[key]();
+                        } else {
+                            tmpStore[key] = storeContent[key];
+                        }
+                    }
+                });
 
-                storesForExtend[extendName] = deepmerge(
-                    storesForExtend[extendName] || {},
+                extendedStore[extendName] = deepmerge(
+                    extendedStore[extendName] || {},
                     tmpStore,
                 );
             });
@@ -67,32 +70,23 @@ export default async ({ app }) => {
             storeModules[storeName].actions = {};
         }
 
-        if (storesForExtend[storeName]) {
-            if (storesForExtend[storeName].state) {
-                states = deepmerge(
-                    states || {},
-                    storesForExtend[storeName].state,
-                );
-                storeModules[storeName].state = () => states;
-            }
-            if (storesForExtend[storeName].mutations) {
-                storeModules[storeName].mutations = deepmerge(
-                    storeModules[storeName].mutations || {},
-                    storesForExtend[storeName].mutations,
-                );
-            }
-            if (storesForExtend[storeName].actions) {
-                storeModules[storeName].actions = deepmerge(
-                    storeModules[storeName].actions || {},
-                    storesForExtend[storeName].actions,
-                );
-            }
-            if (storesForExtend[storeName].getters) {
-                storeModules[storeName].getters = deepmerge(
-                    storeModules[storeName].getters || {},
-                    storesForExtend[storeName].getters,
-                );
-            }
+        if (extendedStore[storeName]) {
+            Object.keys(storeKeys).forEach((key) => {
+                if (extendedStore[storeName][key]) {
+                    if (key === 'state') {
+                        states = deepmerge(
+                            states || {},
+                            extendedStore[storeName][key],
+                        );
+                        storeModules[storeName][key] = () => states;
+                    } else {
+                        storeModules[storeName][key] = deepmerge(
+                            storeModules[storeName][key] || {},
+                            extendedStore[storeName][key],
+                        );
+                    }
+                }
+            });
         }
 
         // DEFAULT VUEX METHODS
