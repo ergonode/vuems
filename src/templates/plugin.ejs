@@ -32,10 +32,11 @@ export default ({ app }, inject) => {
         }
     });
 
-    inject('getExtendedComponents', type => extendComponents[type]);
+    inject('getExtendedComponents', type => extendComponents[type] || {});
     inject('extendMethods', (type, payload) => {
-        extendMethods[type].forEach((method) => {
-            method(payload);
-        });
+        if (extendMethods[type]) {
+            return extendMethods[type].map(method => method(payload));
+        }
+        return [];
     });
 };
