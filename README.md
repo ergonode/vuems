@@ -386,6 +386,48 @@ Module must have a `config` directory with `index.js` file. All available config
         ]
     }
     ```
+  - `extendStore`: You can extend the existing Vuex store.
+    - Type: `Object`
+    - Required: `false`
+
+    **Example**:
+    ```js
+    const TestStore = () => import('@Test/extends/store/test');
+
+    export default {
+        extendStore: {
+            Test: TestStore,
+        },
+    }
+    ```
+    If we have existing `Test` store and we want extend it.
+
+  - `extendMethods`: You can insert any method from module
+    - Type: `Object`
+    - Required: `false`
+
+    **Example**:
+    ```js
+    // Definition
+    export default {
+        extendMethods: {
+            '@Test/store/test/action': () => {
+                console.log('test');
+            }
+        },
+    }
+    ```
+    The global `this.$extendMethods()` function is used for call extended methods.
+    ```js
+    // Use in other module
+    export default {
+        create({ state }) {
+            ...
+            this.$extendMethods('@Test/store/test/action');
+            ...
+        }
+    }
+    ```
 
 ## Example application
 

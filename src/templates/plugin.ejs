@@ -33,9 +33,11 @@ export default ({ app }, inject) => {
     });
 
     inject('getExtendedComponents', type => extendComponents[type] || {});
-    inject('extendMethods', (type, payload) => {
+    inject('extendMethods', async (type, payload) => {
         if (extendMethods[type]) {
-            return extendMethods[type].map(method => method(payload));
+            const methods = await Promise.all(extendMethods[type].map(method => method(payload)));
+
+            return methods;
         }
         return [];
     });
