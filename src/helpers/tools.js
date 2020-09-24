@@ -19,26 +19,32 @@ import {
 * @param {string} options.options - All global options
 * @returns {Promise<Object[]>}
 */
-export function loadModules({ modules, options }) {
-    return modules.map(async ({ name, path }) => {
-        const {
-            beforeModule = null,
-            default: moduleFn,
-            afterModule = null,
-        } = await import(`${path}`);
+export function loadModules({ modules, options, configurations }) {
+    return modules
+        .map((data) => ({
+              ...data,
+              order: configurations.find(m => m.name === data.name).order || 1000,
+        }))
+        .sort((a, b) => a.order - b.order)
+        .map(async ({ name, path }) => {
+            const {
+                beforeModule = null,
+                default: moduleFn,
+                afterModule = null,
+            } = await import(`${path}`);
 
-        if (beforeModule) {
-            await beforeModule.call(this, options);
-        }
+            if (beforeModule) {
+                await beforeModule.call(this, options);
+            }
 
-        await moduleFn.call(this, options);
+            await moduleFn.call(this, options);
 
-        if (afterModule) {
-            await afterModule.call(this, options);
-        }
+            if (afterModule) {
+                await afterModule.call(this, options);
+            }
 
-        return `Module [${name}] loaded`;
-    });
+            return `Module [${name}] loaded`;
+        });
 }
 
 /**

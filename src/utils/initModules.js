@@ -11,14 +11,18 @@ import { loadModules } from '../helpers/tools';
 * @param {Object} moduleOptions - Global options
 * @returns {Promise<Object>}
 */
-export default async function initModules(moduleOptions) {
+export default async function initModules(configurations, moduleOptions) {
     const message = {};
+    const {
+        allModules,
+    } = moduleOptions;
 
     message.allModules = await Promise.all(
         loadModules.call(this,
             {
-                modules: moduleOptions.allModules,
+                modules: allModules,
                 options: moduleOptions,
+                configurations,
             }),
     );
 
