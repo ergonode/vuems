@@ -208,19 +208,22 @@ function setCss(configurations, { allModules }) {
 * @returns {Promise<Object>}
 */
 export default async function beforeAllModule(moduleOptions) {
-    const message = {};
+    const messages = {};
 
     if (moduleOptions.modules.npm && moduleOptions.modules.npm.length) {
-        message.symlinksCreator = await symlinksCreator(moduleOptions);
+        messages.symlinksCreator = await symlinksCreator(moduleOptions);
     }
-    message.checkDirectories = await checkDirectories(moduleOptions);
-    message.checkRequiredModules = await checkRequiredModules(moduleOptions);
+    messages.checkDirectories = await checkDirectories(moduleOptions);
+    messages.checkRequiredModules = await checkRequiredModules(moduleOptions);
     const modulesConfigs = await getModulesConfiguration(moduleOptions);
 
-    message.checkModulesRelations = await checkModulesRelations(modulesConfigs);
-    message.setAliases = await setAliases.call(this, modulesConfigs, moduleOptions);
-    message.setPlugins = await setPlugins.call(this, modulesConfigs, moduleOptions);
-    message.setCss = await setCss.call(this, modulesConfigs, moduleOptions);
+    messages.checkModulesRelations = await checkModulesRelations(modulesConfigs);
+    messages.setAliases = await setAliases.call(this, modulesConfigs, moduleOptions);
+    messages.setPlugins = await setPlugins.call(this, modulesConfigs, moduleOptions);
+    messages.setCss = await setCss.call(this, modulesConfigs, moduleOptions);
 
-    return message;
+    return {
+        messages,
+        modulesConfigs,
+    };
 }

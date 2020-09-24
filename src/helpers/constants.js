@@ -32,6 +32,7 @@ export const DIRECTORIES = {
     pages: 'pages',
     plugins: 'plugins',
     store: 'store',
+    locales: 'locales',
 };
 
 /**
@@ -48,6 +49,8 @@ export const DEFAULTS = {
     vendorDir: 'vendor', // tmp npm modules directory (symlinks)
     nodeModulesDir: 'node_modules', // directory to find npm modules
     vuex: true, // set 'true' if VUEX is implemented in the project
+    i18n: false, // set 'true' if i18n plugin is implemented in the project
+    i18nLocales: [], // array with translations language
     isDev: false,
     logLoadedModules: false,
     logProcess: true,

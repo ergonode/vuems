@@ -60,11 +60,11 @@ export default async function VueMS(moduleOptions = {}) {
 
     options.allModules = [...localModules, ...npmModules];
 
-    const beforeAllMessages = await beforeAll.call(this, options);
-    const initModulesMessages = await initModules.call(this, options);
+    const beforeAllData = await beforeAll.call(this, options);
+    const initModulesMessages = await initModules.call(this, beforeAllData.modulesConfigs, options);
     const afterAllMessages = await afterAll.call(this, options);
     const messages = {
-        ...beforeAllMessages,
+        ...beforeAllData.messages,
         ...initModulesMessages,
         ...afterAllMessages,
     };

@@ -118,6 +118,20 @@ Directory where installed npm modules are to be found.
 
 If Vuex library is used.
 
+### `i18n`
+
+- Type: `Boolean`
+- Default: `false`
+
+If i18n plugin is used.
+
+### `i18nLocales`
+
+- Type: `Array`
+- Default: `[]`
+
+Property set translation languages. Is active if i18n flag is true.
+
 ### `isDev`
 
 - Type: `Boolean`

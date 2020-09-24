@@ -3,6 +3,10 @@
  * See LICENSE for license details.
  */
 import { resolve as resolvePath } from 'path';
+import deepmerge from 'deepmerge';
+import {
+    readFileSync,
+} from 'fs-extra';
 import { findPaths, flattenDeep } from '../helpers/tools';
 import { DIRECTORIES } from '../helpers/constants';
 
@@ -115,6 +119,41 @@ async function registerStore({ allModules, directories }) {
 }
 
 /**
+* Register all i18n translations
+* @async
+* @function registerI18n
+* @param {Object} options - Module options
+* @param {Object} options.allModules - All active modules
+* @returns {Promise<string>}
+*/
+async function registerI18n({ allModules, directories, i18nLocales }) {
+    const localesDir = directories.locales || DIRECTORIES.locales;
+
+    i18nLocales.forEach(async (lang) => {
+        let i18n = {};
+        const allTranslations = await Promise.all(findPaths({
+            modules: allModules,
+            suffix: localesDir,
+            regExp: new RegExp(`${lang}.json`, 'i'),
+        }));
+
+        flattenDeep(allTranslations.filter(m => m !== null)).forEach((l) => {
+            i18n = deepmerge(i18n, JSON.parse(readFileSync(l.fullname, 'utf8')));
+        });
+
+        await this.addTemplate({
+            fileName: `locales/${lang}.json`,
+            src: resolvePath(__dirname, '../templates/i18n.ejs'),
+            options: {
+                i18n,
+            },
+        });
+    });
+
+    return 'I18n registered';
+}
+
+/**
 * Register main plugin with extensions
 * @async
 * @function registerPlugins
@@ -151,6 +190,9 @@ export default async function afterAllModule(moduleOptions) {
         message.registerStore = await registerStore.call(this, moduleOptions);
     }
     message.registerPlugins = await registerPlugins.call(this, moduleOptions);
+    if (moduleOptions.i18n) {
+        message.registerStore = await registerI18n.call(this, moduleOptions);
+    }
 
     return message;
 }
