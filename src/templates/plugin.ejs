@@ -9,12 +9,6 @@ import extendsModules from '~/.nuxt/extends.modules';
 
 export default ({ app }, inject) => {
     const extendMethods = {};
-    const hash = () => Math
-        .random()
-        .toString(36)
-        .substring(2, 15) + Math.random()
-        .toString(36)
-        .substring(2, 15);
     const extendComponents = Object.values(extendsModules)
         .reduce((acc, current) => deepmerge(acc, current.extendComponents || {}), {});
 
@@ -32,10 +26,10 @@ export default ({ app }, inject) => {
         }
     });
 
-    inject('getExtendedComponents', type => extendComponents[type] || {});
-    inject('extendMethods', async (type, payload) => {
-        if (extendMethods[type]) {
-            const methods = await Promise.all(extendMethods[type].map(method => method(payload)));
+    inject('getExtendSlot', key => extendComponents[key] || {});
+    inject('getExtendMethod', async (key, payload) => {
+        if (extendMethods[key]) {
+            const methods = await Promise.all(extendMethods[key].map(method => method(payload)));
 
             return methods;
         }

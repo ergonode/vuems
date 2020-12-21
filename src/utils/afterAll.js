@@ -8,6 +8,7 @@ import {
     readFileSync,
 } from 'fs-extra';
 import { findPaths, flattenDeep } from '../helpers/tools';
+import { log } from '../helpers/log';
 import { DIRECTORIES } from '../helpers/constants';
 
 /**
@@ -59,6 +60,10 @@ async function registerExtends({ allModules, directories }) {
         options: {
             extend: flattenDeep(allExtends.filter(m => m !== null)),
         },
+    });
+    await this.addTemplate({
+        fileName: 'routerHelper.modules.js',
+        src: resolvePath(__dirname, '../templates/routerHelper.ejs'),
     });
 
     return 'Extends registered';
@@ -124,7 +129,7 @@ async function registerStore({ allModules, directories }) {
 * @function registerI18n
 * @param {Object} options - Module options
 * @param {Object} options.allModules - All active modules
-* @returns {Promise<string>}
+* @returns {string}
 */
 async function registerI18n({ allModules, directories, i18nLocales }) {
     const localesDir = directories.locales || DIRECTORIES.locales;
@@ -176,23 +181,29 @@ async function registerPlugins({ vuex }) {
 
 /**
 * Run actions after all modules are loaded
-* @function afterAllModule
+* @function afterAllModules
 * @param {Object} moduleOptions - Module options
-* @returns {Promise<Object>}
+* @param {Object} params - Data needed to load the module
+* @param {Object} params.options - VueMS initial options
 */
-export default async function afterAllModule(moduleOptions) {
-    const message = {};
+export default async function afterAllModules({ options }) {
+    const { verbose } = options;
+    const promises = [
+        registerRouter.call(this, options),
+        registerExtends.call(this, options),
+        registerMiddleware.call(this, options),
+        registerPlugins.call(this, options),
+    ];
 
-    message.registerRouter = await registerRouter.call(this, moduleOptions);
-    message.registerExtends = await registerExtends.call(this, moduleOptions);
-    message.registerMiddleware = await registerMiddleware.call(this, moduleOptions);
-    if (moduleOptions.vuex) {
-        message.registerStore = await registerStore.call(this, moduleOptions);
-    }
-    message.registerPlugins = await registerPlugins.call(this, moduleOptions);
-    if (moduleOptions.i18n) {
-        message.registerStore = await registerI18n.call(this, moduleOptions);
-    }
+    if (options.vuex) promises.push(registerStore.call(this, options));
+    if (options.i18n) promises.push(registerI18n.call(this, options));
 
-    return message;
+    const logs = await Promise.all(promises);
+
+    if (verbose) {
+        log({
+            header: 'After all modules',
+            logs: logs.filter(x => !!x),
+        });
+    }
 }

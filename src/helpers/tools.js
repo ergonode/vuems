@@ -10,41 +10,29 @@ import recursive from 'recursive-readdir-async';
 import {
     existsSync, remove, ensureSymlink, chmod,
 } from 'fs-extra';
+import { success } from 'consola';
+import { DEFAULTS, DIRECTORIES } from './constants';
 
 /**
-* Load modules from path
-* @function loadModules
+* Load configuration for all modules
+* @function getConfigs
 * @param {Object} options
-* @param {Object[]} options.modules - Modules to load
-* @param {string} options.options - All global options
+* @param {Object[]} options.modules -  Modules to load
+* @param {string} options.suffix - Path suffix
+* @throws {string} Will throw an error if module configuration file not exist
 * @returns {Promise<Object[]>}
 */
-export function loadModules({ modules, options, configurations }) {
-    return modules
-        .map((data) => ({
-              ...data,
-              order: configurations.find(m => m.name === data.name).order || 1000,
-        }))
-        .sort((a, b) => a.order - b.order)
-        .map(async ({ name, path }) => {
-            const {
-                beforeModule = null,
-                default: moduleFn,
-                afterModule = null,
-            } = await import(`${path}`);
+function getConfigs({ modules, suffix }) {
+  return modules.map(async ({ name, path }) => {
+      const fullPath = joinPath(path, suffix);
 
-            if (beforeModule) {
-                await beforeModule.call(this, options);
-            }
+      if (existsSync(fullPath)) {
+          const moduleConfig = await import(`${fullPath}`);
 
-            await moduleFn.call(this, options);
-
-            if (afterModule) {
-                await afterModule.call(this, options);
-            }
-
-            return `Module [${name}] loaded`;
-        });
+          return moduleConfig.default;
+      }
+      throw Error(`Module [${name}] configuration file does not exist.`);
+  });
 }
 
 /**
@@ -91,32 +79,8 @@ export function prepareSymlinks({ npmModules, vendorDir, nodeModulesDir }) {
             await ensureSymlink(src, dst, 'junction');
             const files = await recursive.list(dst);
 
-            await Promise.all(files.map(({ fullname }) => {
-                return chmod(fullname, 0o444); // files only to read
-            }));
+            await Promise.all(files.map(({ fullname }) => chmod(fullname, 0o444))); // files only to read
         }
-    });
-}
-
-/**
-* Load configuration for all modules
-* @function getConfigs
-* @param {Object} options
-* @param {Object[]} options.modules -  Modules to load
-* @param {string} options.suffix - Path suffix
-* @throws {string} Will throw an error if module configuration file not exist
-* @returns {Promise<Object[]>}
-*/
-export function getConfigs({ modules, suffix }) {
-    return modules.map(async ({ name, path }) => {
-        const fullPath = joinPath(path, suffix);
-
-        if (existsSync(fullPath)) {
-            const moduleConfig = await import(`${fullPath}`);
-
-            return moduleConfig.default;
-        }
-        throw Error(`Module [${name}] configuration file does not exist.`);
     });
 }
 
@@ -131,4 +95,82 @@ export function flattenDeep(arr) {
         ? acc.concat(flattenDeep(val))
         : acc.concat(val)
     ), []);
+}
+
+/**
+* Get module configuration
+* @async
+* @function getConfigsForModules
+* @param {Object} options - Module options
+* @param {Object} options.allModules - All active modules
+* @param {Object} options.directories - Directories names
+* @param {Boolean} options.verbose - Flag to showing logs
+* @returns {Promise<Object[]>} All modules configurations
+*/
+export function getConfigsForModules({ allModules, directories, verbose }) {
+    const configDir = directories.config || DIRECTORIES.config;
+
+    return Promise.all(
+        getConfigs({ modules: allModules, suffix: `${configDir}/index.js` }),
+    ).then((config) => {
+        if (verbose) {
+            success('Modules configurations loaded');
+        }
+
+        return config;
+    });
+}
+
+/**
+* Prepare VueMS options
+* @function prepareOptions
+* @param {Object} moduleOptions - Module options
+* @returns {Object} Prepared options
+*/
+export function prepareOptions(moduleOptions) {
+    const options = {
+        ...DEFAULTS,
+        ...this.options.vuems || moduleOptions,
+    };
+    let localModules = options.modules.local || [];
+    let npmModules = options.modules.npm || [];
+
+    if (!localModules.length && !npmModules.length) return false;
+
+    if (this.options.srcDir) {
+        options.vendorDir = resolvePath(this.options.srcDir, options.vendorDir);
+        options.modulesDir = resolvePath(this.options.srcDir, options.modulesDir);
+    }
+
+    if (options.modules.npm) {
+        npmModules = options.modules.npm.map(module => ({
+            name: module,
+            type: 'npm',
+            path: joinPath(options.vendorDir, module, 'src'),
+        }));
+    }
+
+    if (options.modules.local) {
+        localModules = options.modules.local.map((module) => {
+            const path = joinPath(options.modulesDir, module, 'src');
+
+            if (existsSync(path)) {
+                return {
+                    name: module,
+                    type: 'local',
+                    path,
+                };
+            }
+
+            return {
+                name: module,
+                type: 'local',
+                path: joinPath(options.modulesDir, module),
+            };
+        });
+    }
+
+    options.allModules = [...localModules, ...npmModules];
+
+    return options;
 }

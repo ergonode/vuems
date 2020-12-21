@@ -35,8 +35,8 @@ Advantages of VueMS:
 
 ### 📦 Requirements
 
-- [Vue.js](https://vuejs.org) (v2.0+)
-- [Nuxtjs.js](https://nuxtjs.org/) (v2.9+)
+- [Vue.js](https://vuejs.org) (v2.x)
+- [Nuxtjs.js](https://nuxtjs.org/) (v2.x)
 - [Nuxt Router](https://github.com/nuxt-community/router-module)
 
 
@@ -146,7 +146,7 @@ Is development mode on.
 
 Log all loaded modules.
 
-### `logProcess`
+### `verbose`
 
 - Type: `Boolean`
 - Default: `true`
@@ -342,7 +342,7 @@ Module must have a `config` directory with `index.js` file. All available config
       },
     };
     ```
-    The global `this.$getExtendedComponents()` function is used to download the component.
+    The global `this.$getExtendSlot()` function is used to download the component.
     ```js
     // Use in other module
     <template v-for="(component, index) in extenededComponents">
@@ -355,7 +355,7 @@ Module must have a `config` directory with `index.js` file. All available config
     export default {
       computed: {
         extendedComponents() {
-          return this.$getExtendedComponents('NAVIGATION_BAR');
+          return this.$getExtendSlot('NAVIGATION_BAR');
         },
       },
     };
@@ -431,13 +431,13 @@ Module must have a `config` directory with `index.js` file. All available config
         },
     }
     ```
-    The global `this.$extendMethods()` function is used for call extended methods.
+    The global `this.$getExtendMethod()` function is used for call extended methods.
     ```js
     // Use in other module
     export default {
         create({ state }) {
             ...
-            this.$extendMethods('@Test/store/test/action');
+            this.$getExtendMethod('@Test/store/test/action');
             ...
         }
     }
