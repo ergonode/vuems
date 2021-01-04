@@ -2,8 +2,8 @@
   "title": "Vue Micro Services",
   "url": "https://vuems.ergonode.com",
   "logo": {
-    "light": "/logo.svg",
-    "dark": "/logo.svg"
+    "light": "~/logo.svg",
+    "dark": "~/logo.svg"
   },
   "github": "ergonode/vuems"
 }

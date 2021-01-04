@@ -18,7 +18,7 @@ features:
 
 <p align="center">
   <a href="https://github.com/ergonode/vuems" target="_blank" rel="noopener noreferrer">
-    <img src="/logo-bg.png" alt="VueMS logo with background">
+    <img src="./logo-bg.png" alt="VueMS logo with background">
   </a>
 </p>
 
