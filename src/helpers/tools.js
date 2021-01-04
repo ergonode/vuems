@@ -100,17 +100,16 @@ export function flattenDeep(arr) {
 /**
 * Get module configuration
 * @async
-* @function getConfigsForModules
+* @function getModulesConfig
 * @param {Object} options - Module options
 * @param {Object} options.allModules - All active modules
 * @param {Object} options.directories - Directories names
 * @param {Boolean} options.verbose - Flag to showing logs
 * @returns {Promise<Object[]>} All modules configurations
 */
-export function getConfigsForModules({ allModules, directories, verbose }) {
+export async function getModulesConfig({ allModules, directories, verbose }) {
     const configDir = directories.config || DIRECTORIES.config;
-
-    return Promise.all(
+    const configs = await Promise.all(
         getConfigs({ modules: allModules, suffix: `${configDir}/index.js` }),
     ).then((config) => {
         if (verbose) {
@@ -119,6 +118,8 @@ export function getConfigsForModules({ allModules, directories, verbose }) {
 
         return config;
     });
+
+    return configs;
 }
 
 /**

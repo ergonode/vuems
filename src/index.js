@@ -4,13 +4,13 @@
  */
 import { info } from 'consola';
 import {
-    getConfigsForModules,
+    getModulesConfig,
     prepareOptions,
 } from './helpers/tools';
-import beforeAllModules from './utils/beforeAll';
+import beforeModules from './utils/beforeAll';
 import prepareModules from './utils/prepareModules';
 import initModules from './utils/initModules';
-import afterAllModules from './utils/afterAll';
+import afterModules from './utils/afterAll';
 
 /**
  * A simple mechanism to transform a monolithic Vue application into an application based on Micro Services architecture.
@@ -28,11 +28,11 @@ export default async function VueMS(moduleOptions = {}) {
     }
     info('VueMS init');
 
-    await beforeAllModules.call(this, {
+    await beforeModules.call(this, {
         options,
     });
 
-    const modulesConfigs = await getConfigsForModules(options);
+    const modulesConfigs = await getModulesConfig(options);
 
     await prepareModules.call(this, {
         configurations: modulesConfigs,
@@ -42,7 +42,7 @@ export default async function VueMS(moduleOptions = {}) {
         configurations: modulesConfigs,
         options,
     });
-    await afterAllModules.call(this, {
+    await afterModules.call(this, {
         options,
     });
 }

@@ -181,12 +181,12 @@ async function registerPlugins({ vuex }) {
 
 /**
 * Run actions after all modules are loaded
-* @function afterAllModules
+* @function afterModules
 * @param {Object} moduleOptions - Module options
 * @param {Object} params - Data needed to load the module
 * @param {Object} params.options - VueMS initial options
 */
-export default async function afterAllModules({ options }) {
+export default async function afterModules({ options }) {
     const { verbose } = options;
     const promises = [
         registerRouter.call(this, options),

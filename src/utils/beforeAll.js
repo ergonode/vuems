@@ -79,11 +79,11 @@ function checkRequiredModules({ allModules, required }) {
 
 /**
 * Run actions before any modules are loaded
-* @function beforeAllModules
+* @function beforeModules
 * @param {Object} params - Data needed to load the module
 * @param {Object} params.options - VueMS initial options
 */
-export default async function beforeAllModules({ options }) {
+export default async function beforeModules({ options }) {
     const { verbose } = options;
     const logs = await Promise.all([
         symlinksCreator(options),
