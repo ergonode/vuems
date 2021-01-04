@@ -7,7 +7,7 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "deploy": "push-dir --dir=dist --branch=docs --cleanup"
+    "deploy": "push-dir --dir=dist --branch=docs --remote=upstream --cleanup"
   },
   "dependencies": {
     "@nuxt/content-theme-docs": "^0.8.0",
