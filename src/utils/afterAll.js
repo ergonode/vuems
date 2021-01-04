@@ -131,11 +131,11 @@ async function registerStore({ allModules, directories }) {
 * @param {Object} options.allModules - All active modules
 * @returns {string}
 */
-async function registerI18n({ allModules, directories, i18nLocales }) {
+async function registerI18n({ allModules, directories, i18n }) {
     const localesDir = directories.locales || DIRECTORIES.locales;
 
-    i18nLocales.forEach(async (lang) => {
-        let i18n = {};
+    i18n.forEach(async (lang) => {
+        let i18nTmp = {};
         const allTranslations = await Promise.all(findPaths({
             modules: allModules,
             suffix: localesDir,
@@ -143,14 +143,14 @@ async function registerI18n({ allModules, directories, i18nLocales }) {
         }));
 
         flattenDeep(allTranslations.filter(m => m !== null)).forEach((l) => {
-            i18n = deepmerge(i18n, JSON.parse(readFileSync(l.fullname, 'utf8')));
+            i18nTmp = deepmerge(i18nTmp, JSON.parse(readFileSync(l.fullname, 'utf8')));
         });
 
         await this.addTemplate({
             fileName: `locales/${lang}.json`,
             src: resolvePath(__dirname, '../templates/i18n.ejs'),
             options: {
-                i18n,
+                i18n: i18nTmp,
             },
         });
     });
@@ -196,7 +196,9 @@ export default async function afterAllModules({ options }) {
     ];
 
     if (options.vuex) promises.push(registerStore.call(this, options));
-    if (options.i18n) promises.push(registerI18n.call(this, options));
+    if (Array.isArray(options.i18n) && options.i18n.length > 0) {
+        promises.push(registerI18n.call(this, options));
+    }
 
     const logs = await Promise.all(promises);
 

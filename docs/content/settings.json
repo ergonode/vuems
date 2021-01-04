@@ -1,0 +1,9 @@
+{
+  "title": "Vue Micro Services",
+  "url": "",
+  "logo": {
+    "light": "/logo.svg",
+    "dark": "/logo.svg"
+  },
+  "github": "ergonode/vuems"
+}

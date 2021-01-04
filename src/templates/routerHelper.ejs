@@ -47,33 +47,38 @@ export function setLocalMiddlewares({
 }
 
 export function extendRoutes(routerLocal = []) {
-    const extendTabs = Object.values(extendsModules)
+    const extendRoutesChildren = Object.values(extendsModules)
         .reduce((acc, current) => {
             let connectedArray = acc;
 
-            if (current.extendTabs) {
+            if (current.extendRoutesChildren) {
                 connectedArray = [
                     ...acc,
-                    ...current.extendTabs,
+                    ...current.extendRoutesChildren,
                 ];
             }
             return connectedArray;
         }, []);
     const extendedRoutes = [].concat(...Object.values(routerModules), routerLocal);
 
-    for (let i = 0; i < extendTabs.length; i += 1) {
-        const index = extendedRoutes.findIndex(e => e.name === extendTabs[i].name);
+    for (let i = 0; i < extendRoutesChildren.length; i += 1) {
+        const index = extendedRoutes.findIndex(e => e.name === extendRoutesChildren[i].name);
 
         if (index !== -1) {
+            const {
+                children = [],
+            } = extendedRoutes[index];
+
             extendedRoutes[index] = {
                 ...extendedRoutes[index],
                 children: [
-                    ...extendedRoutes[index].children,
-                    ...extendTabs[i].children,
+                    ...children,
+                    ...extendRoutesChildren[i].children,
                 ],
             };
         }
     }
+
     return extendedRoutes;
 }
 

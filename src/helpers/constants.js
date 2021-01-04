@@ -49,9 +49,8 @@ export const DEFAULTS = {
     modulesDir: 'modules', // local modules directory
     vendorDir: 'vendor', // tmp npm modules directory (symlinks)
     nodeModulesDir: 'node_modules', // directory to find npm modules
-    vuex: true, // set 'true' if VUEX is implemented in the project
-    i18n: false, // set 'true' if i18n plugin is implemented in the project
-    i18nLocales: [], // array with translations language
+    vuex: false, // set 'true' if VUEX is implemented in the project
+    i18n: [], // set array with translations language if i18n plugin is implemented in the project
     isDev: false, // is development mode
     logLoadedModules: false, // show debug logs with loaded modules
     verbose: true, // show debug logs

@@ -30,6 +30,7 @@ ftp
 .idea
 .vscode
 .awcache
+.local-pack
 
 
 # misc

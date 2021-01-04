@@ -17,6 +17,7 @@
 > A simple mechanism to transform a monolithic Vue application into an application based on Micro Services architecture.
 
 ## Inspiration
+
 Combination of `Vue` and `NuxtJS` frameworks gives us the opportunity to build any web application we want.
 Unfortunately, application built on this approach is monolithic and we cannot extend its behavior. Of course we can extend project with some elements, but these are small fragments that do not add much. In addition, `NuxtJS` forces developers to have a specific directory structure (page, middleware, store, etc.). This gives us a rigid application built on specific principles.
 
@@ -27,53 +28,61 @@ Advantages of VueMS:
 
 - Each module can have its own business context communicating separately with the backend application.
 - Modules can be turned active or inactivate anytime which allows to customize the application for each client individually.
-- Modules can be loaded locally within the application and downloaded from external servers ([npm](https://verdaccio.org/), [Verdaccio](https://verdaccio.org/)).
+- Modules can be loaded locally within the application and downloaded from external servers ([npm][npm], [Verdaccio][verdaccio]).
 - Thanks to having modules on external servers, we can version them, therefore the modules are independent and easy to expand.
 - The customer can upgrade any package or replace it with another one.
 
+---
 ## Detailed Start
-
 ### 📦 Requirements
 
-- [Vue.js](https://vuejs.org) (v2.x)
-- [Nuxtjs.js](https://nuxtjs.org/) (v2.x)
-- [Nuxt Router](https://github.com/nuxt-community/router-module)
+- [Vue.js][vue] (v2.x)
+- [Nuxt.js][nuxt] (v2.x)
+- [Nuxt Router][router]
 
 
 ### 🚀  Power Supplies
-- [Vuex](http://vuex.vuejs.org), optionally
+- [Vuex][vuex] - optionally
+- [i18n][i18n] - optionally
 
+---
 ## Setup
-1. Add `@ergonode/vuems` dependency to your project
 
-  ```bash
-  npm install @ergonode/vuems
-  # or
-  yarn add @ergonode/vuems
-  ```
+#### 1. Add `@ergonode/vuems` dependency to your project.
 
-2. Add `@ergonode/vuems` to the `buildModules` section of `nuxt.config.js`
+```bash
+npm install @ergonode/vuems
+# or
+yarn add @ergonode/vuems
+```
+
+#### 2. Add `@ergonode/vuems` to the `buildModules` section in the `nuxt.config.js` file.
+
+```js
+  export default {
+    ...
+    buildModules: [
+      ['@ergonode/vuems', { /* module options */ }]
+    ],
+    ...
+  }
+```
+
+  ##### Using top level options
 
   ```js
   export default {
+    ...
     buildModules: [
-      ['@ergonode/vuems', { /* module options */ }]
-    ]
+      '@ergonode/vuems'
+    ],
+    vuems: {
+      /* module options */
+    },
+    ...
   }
-```
-
-### Using top level options
-
-```js
-export default {
-  buildModules: [
-    '@ergonode/vuems'
-  ],
-  vuems: {
-    /* module options */
-  }
-}
-```
+  ```
+---
 ## Options
 
 ### `modules`
@@ -124,13 +133,6 @@ If Vuex library is used.
 - Default: `false`
 
 If i18n plugin is used.
-
-### `i18nLocales`
-
-- Type: `Array`
-- Default: `[]`
-
-Property set translation languages. Is active if i18n flag is true.
 
 ### `isDev`
 
@@ -191,7 +193,7 @@ vuems: {
     isDev: process.env.NODE_ENV !== 'production',
 }
 ```
-
+---
 ## Module creating
 
 ### Introduction
@@ -299,6 +301,7 @@ Module must have a `config` directory with `index.js` file. All available config
       ]
   };
   ```
+
 - `routes.js`: Main routing configuration file for the module. Is closely related with [Nuxt Router](https://github.com/nuxt-community/router-module) mechanism.
 
   **Example**:
@@ -321,6 +324,7 @@ Module must have a `config` directory with `index.js` file. All available config
       },
     ];
     ```
+
 - `extends.js`: Mechanisms extending other modules.
   - `extendComponents`: You can extend components from one module to components from another.
     - Type: `Object`
@@ -361,7 +365,7 @@ Module must have a `config` directory with `index.js` file. All available config
     };
     </script>
     ```
-  - `extendTabs`: You can extend routing in any module.
+  - `extendRoutesChildren`: You can extend routing in any module.
     - Type: `Array`
     - Required: `false`
 
@@ -370,7 +374,7 @@ Module must have a `config` directory with `index.js` file. All available config
     const TestSettingsTab = () => import('@Test/components/SettingsTab').then(m => m.default || m);
 
     export default {
-      extendTabs: [
+      extendRoutesChildren: [
           {
             name: 'settings', // existing router name what we want extend
             children: [ // array with router to extend
@@ -446,3 +450,12 @@ Module must have a `config` directory with `index.js` file. All available config
 ## Example application
 
 - [Ergonode](https://github.com/ergonode/frontend)
+
+
+[npm]: https://verdaccio.org/
+[verdaccio]: https://verdaccio.org/
+[vue]: https://vuejs.org
+[nuxt]: https://nuxtjs.org/
+[router]: https://github.com/nuxt-community/router-module
+[vuex]: http://vuex.vuejs.org
+[i18n]: https://i18n.nuxtjs.org/

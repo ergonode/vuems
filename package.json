@@ -23,6 +23,9 @@
     "test:dev": "npm run test -- --coverage --u --passWithNoTests",
     "test": "npm run lint && jest --no-cache --passWithNoTests"
   },
+  "engines": {
+    "node": ">=10.20.0"
+  },
   "files": [
     "src/*"
   ],
