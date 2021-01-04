@@ -21,6 +21,7 @@ build
 tmp
 foto
 ftp
+docs/static/sw.js
 
 # ESLint generate
 .eslintcache
