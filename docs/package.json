@@ -6,10 +6,14 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@nuxt/content-theme-docs": "^0.8.0",
     "nuxt": "^2.14.7"
+  },
+  "devDependencies": {
+    "gh-pages": "^3.1.0"
   }
 }
