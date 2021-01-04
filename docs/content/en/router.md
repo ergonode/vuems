@@ -72,7 +72,7 @@ Each module has its own routing.
 It must be added to the `routes.js` file of the `config` directory.
 
 <alert type="info" align="center">
-      <img src="/examples/module-router.png" alt="Module router">
+      <img src="./examples/module-router.png" alt="Module router">
 </alert>
 
 ```javascript [@Dashboard/config/routes.js]
