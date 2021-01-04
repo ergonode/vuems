@@ -2,10 +2,9 @@
  * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
  * See LICENSE for license details.
  */
-import { join } from 'path';
 import { existsSync, ensureDir } from 'fs-extra';
-import { prepareSymlinks, getConfigs } from '../helpers/tools';
-import { DIRECTORIES } from '../helpers/constants';
+import { log } from '../helpers/log';
+import { prepareSymlinks } from '../helpers/tools';
 
 /**
 * Created symlinks for npm modules
@@ -24,6 +23,8 @@ async function symlinksCreator({
     vendorDir,
     nodeModulesDir,
 }) {
+    if (!npmModules || !npmModules.length) return null;
+
     await ensureDir(vendorDir, 0o2775); // Ensure vendor directory exists
     await Promise.all(prepareSymlinks({ npmModules, vendorDir, nodeModulesDir }));
 
@@ -77,153 +78,23 @@ function checkRequiredModules({ allModules, required }) {
 }
 
 /**
-* Get module configuration
-* @async
-* @function getModulesConfiguration
-* @param {Object} options - Module options
-* @param {Object} options.allModules - All active modules
-* @returns {Promise<Object[]>} All modules configurations
-*/
-function getModulesConfiguration({ allModules, directories }) {
-    const configDir = directories.config || DIRECTORIES.config;
-
-    return Promise.all(getConfigs({ modules: allModules, suffix: `${configDir}/index.js` }));
-}
-
-/**
-* Check modules relations
-* @function checkModulesRelations
-* @param {Object[]} configs - All modules configurations
-* @throws {string} Will throw an error if relations are incorrect
-* @returns {Promise<string>}
-*/
-function checkModulesRelations(configs) {
-    return new Promise((resolve) => {
-        configs.forEach((config) => {
-            if (config.relations) {
-                config.relations.forEach((relation) => {
-                    if (relation && !configs.find(c => c.name === relation)) {
-                        throw Error(`Module [${config.name}] has relation with [${relation}].\n Module [${relation}] does not exist.`);
-                    }
-                });
-            }
-        });
-        resolve('All relations correct');
-    });
-}
-
-/**
-* Set aliases for modules
-* @function setAliases
-* @param {Object[]} configurations - All modules configurations
-* @param {Object} options - Module options
-* @param {string} options.allModules - All active modules
-* @returns {Promise<string>}
-*/
-async function setAliases(configurations, { allModules }) {
-    await this.extendBuild((config) => {
-        const alias = config.resolve.alias || {};
-
-        configurations.forEach((configuration) => {
-            const { name } = configuration;
-
-            if (configuration.aliases) {
-                const { aliases } = configuration;
-
-                Object.keys(aliases).forEach((key) => {
-                    alias[key] = join(allModules.find(m => m.name === name).path, aliases[key]).replace(/\/$/g, '');
-                });
-            }
-
-            if (configuration.replacements) {
-                const { replacements } = configuration;
-
-                Object.keys(replacements).forEach((key) => {
-                    alias[key] = join(allModules.find(m => m.name === name).path, replacements[key]).replace(/\/$/g, '');
-                });
-            }
-        });
-    });
-
-    return 'All aliases set';
-}
-
-/**
-* Set plugins for modules
-* @function setPlugins
-* @param {Object[]} configurations - All modules configurations
-* @param {Object} options - Module options
-* @param {string} options.allModules - All active modules
-* @returns {Promise<string>}
-*/
-async function setPlugins(configurations, { allModules }) {
-    return new Promise((resolve) => {
-        configurations.forEach((configuration) => {
-            if (configuration.plugins) {
-                const { name, plugins } = configuration;
-                const moduleName = name.replace(/[^a-zA-Z]/g, '');
-
-                plugins.forEach(async ({ ssr, src }) => {
-                    const pluginPath = join(allModules.find(m => m.name === name).path, src).replace(/\/$/g, '');
-
-                    await this.addPlugin({
-                        src: `${pluginPath}.js`,
-                        fileName: join('modules', moduleName, `${src}.js`),
-                        ssr,
-                    });
-                });
-            }
-        });
-        resolve('All plugins css set');
-    });
-}
-
-/**
-* Set global css for modules
-* @function setCss
-* @param {Object[]} configurations - All modules configurations
-* @param {Object} options - Module options
-* @param {string} options.allModules - All active modules
-* @returns {Promise<string>}
-*/
-function setCss(configurations, { allModules }) {
-    return new Promise((resolve) => {
-        configurations.forEach((configuration) => {
-            if (configuration.css) {
-                const { name, css } = configuration;
-
-                css.forEach((style) => {
-                    this.options.css.push(join(allModules.find(m => m.name === name).path, style).replace(/\/$/g, ''));
-                });
-            }
-        });
-        resolve('All global css set');
-    });
-}
-
-/**
 * Run actions before any modules are loaded
-* @function beforeAllModule
-* @param {Object} moduleOptions - Module options
-* @returns {Promise<Object>}
+* @function beforeModules
+* @param {Object} params - Data needed to load the module
+* @param {Object} params.options - VueMS initial options
 */
-export default async function beforeAllModule(moduleOptions) {
-    const messages = {};
+export default async function beforeModules({ options }) {
+    const { verbose } = options;
+    const logs = await Promise.all([
+        symlinksCreator(options),
+        checkDirectories(options),
+        checkRequiredModules(options),
+    ]);
 
-    if (moduleOptions.modules.npm && moduleOptions.modules.npm.length) {
-        messages.symlinksCreator = await symlinksCreator(moduleOptions);
+    if (verbose) {
+        log({
+            header: 'Before all modules',
+            logs: logs.filter(x => !!x),
+        });
     }
-    messages.checkDirectories = await checkDirectories(moduleOptions);
-    messages.checkRequiredModules = await checkRequiredModules(moduleOptions);
-    const modulesConfigs = await getModulesConfiguration(moduleOptions);
-
-    messages.checkModulesRelations = await checkModulesRelations(modulesConfigs);
-    messages.setAliases = await setAliases.call(this, modulesConfigs, moduleOptions);
-    messages.setPlugins = await setPlugins.call(this, modulesConfigs, moduleOptions);
-    messages.setCss = await setCss.call(this, modulesConfigs, moduleOptions);
-
-    return {
-        messages,
-        modulesConfigs,
-    };
 }
