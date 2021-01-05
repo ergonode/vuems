@@ -76,5 +76,5 @@ export default {
 [vue]: https://vuejs.org
 [nuxt]: https://nuxtjs.org/
 [router]: https://github.com/nuxt-community/router-module
-[vuex]: http://vuex.vuejs.org
+[vuex]: https://vuex.vuejs.org
 [i18n]: https://i18n.nuxtjs.org/

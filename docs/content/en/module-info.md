@@ -125,4 +125,4 @@ If you want to change the default directory structure, you have to change it in 
 [nuxt-dirs]: https://nuxtjs.org/guides/get-started/directory-structure
 [nuxt-modules]: https://nuxtjs.org/guide/modules/
 [vuems-dirs]: /options#directories
-[doc-config]: http://localhost:3000/module-config#config-directory
+[doc-config]: /module-config#config-directory
