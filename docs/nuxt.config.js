@@ -7,7 +7,7 @@ import theme from '@nuxt/content-theme-docs';
 export default theme({
     target: 'static',
     router: {
-        base: '/vuems/',
+        base: '/',
     },
     docs: {
         primaryColor: '#00BC87',
