@@ -47,9 +47,16 @@ This gives us a rigid application built on specific principles.
 Structure of these parts is identical to the monolithic application, however each service can operate separately, communicate and interact with one another.<br>
 The services can have small mechanisms and very complex structures.
 
+<img src="preview.png" alt="Preview"/>
+
 ## Features
 
 <list :items="features"></list>
 
+## Demo
+
+You can find it [here](https://github.com/ergonode/vuems-demo)
+
+---
 
 <p class="flex items-center">Enjoy light and dark mode:&nbsp;<app-color-switcher class="inline-flex ml-2"></app-color-switcher></p>
