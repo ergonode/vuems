@@ -1,11 +1,11 @@
 ---
-title: First module
+title: Core module
 description: 'Create Core module'
 position: 13
 category: Cookbook
 ---
 
-The first module will be called `Core` because it will be the main module to supervise everything
+The `Core` module will supervise every other module.
 
 > All files to be added are located in the `src` directory.
 
@@ -24,7 +24,7 @@ First you need to create an [initialization file](/module-config#indexjs).
 
 ## Configuration
 
-We create a `config` directory and in it we create a `index.js` file that contains all the configurations.
+We create a `config` directory and in it we create an `index.js` file that contains all the configurations.
 
 
 > More information about [configuration](/module-config#main-configuration).

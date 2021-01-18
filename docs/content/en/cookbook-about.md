@@ -24,7 +24,7 @@ First you need to create an [initialization file](/module-config#indexjs).
 
 ## Configuration
 
-We create a `config` directory and in it we create a `index.js` file that contains all the configurations.
+We create a `config` directory and in it we create an `index.js` file that contains all the configurations.
 
 
 > More information about [configuration](/module-config#main-configuration).

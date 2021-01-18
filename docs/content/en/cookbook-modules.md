@@ -31,7 +31,7 @@ In `modules` directory we create ours modules.
 `Scope` is a space for grouping modules.
 It is useful for keeping order when publishing modules to **npm**.
 
-For this demo we create dwo scope directories: `@example` and `@example2`.
+For this demo we've created two scoped directories : `@example` and `@example2`.
 
 <alert type="info" align="center">
       <img src="demo/image/demo-module-scopes.png" alt="Module scopes"/>

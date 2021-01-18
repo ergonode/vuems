@@ -15,7 +15,7 @@ which will be transformed into a Micro Service architecture using **VueMS**.
 
 ## Create clean NuxtJS project
 
-To build a **demo** we use the ready [CLI NuxtJS][nuxt-cli] to build applications.
+To build a **demo** we use the ready [CLI NuxtJS][nuxt-cli] library to build applications.
 
 
 ### Using `create-nuxt-app`
@@ -65,7 +65,7 @@ Load module and set first configuration.
   }
 ```
 <alert type="info">
-  Now we don't need any other <b>VueMS</b> settings, we will set them in the next steps.
+  For the time being, we don't need any other <b>VueMS</b> settings, we will set them in the next steps.
 </alert>
 
 
@@ -110,7 +110,7 @@ export function createRouter() {
 <alert type="warning">
   At this point our application <b>does not have routing</b>.
 
-  Loading the <code>~/.nuxt/routerHelper.modules</code> file is not possible now because we do not have any module so the file does not exist yet.
+  Loading the <code>~/.nuxt/routerHelper.modules</code> file is not possible now because we do not have any module added so the file does not exist yet.
 </alert>
 
 
