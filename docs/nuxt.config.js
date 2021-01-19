@@ -6,9 +6,6 @@ import theme from '@nuxt/content-theme-docs';
 
 export default theme({
     target: 'static',
-    router: {
-        base: '/vuems/',
-    },
     docs: {
         primaryColor: '#00BC87',
         loading: { color: '#00BC87' },
