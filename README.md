@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/@ergonode/vuems" rel="noopener noreferrer">
-    <img width="300" src="logo.png" alt="VueMS logo">
+    <img width="300" src="docs/static/logo.svg" alt="VueMS logo">
   </a>
 </p>
 <h1 align="center">Vue Micro Services</h1>
@@ -12,6 +12,7 @@
     <img alt="NPM" src="https://img.shields.io/npm/l/@ergonode/vuems">
   </a>
 </p>
+<h4 align="center"><a href="https://vuems.ergonode.com/">📖 Read the documentation</a></h4>
 <br>
 
 > A simple mechanism to transform a monolithic Vue application into an application based on Micro Services architecture.
