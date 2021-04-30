@@ -1,7 +1,8 @@
 /*
- * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
+ * Copyright © Ergonode Sp. z o.o. All rights reserved.
  * See LICENSE for license details.
  */
+
 <%= options.extend.map(({ fullname }) =>`import ${'extend_' + hash(fullname)} from '${fullname.replace(/\\/g,'/')}';`).join('\n') %>
 
 export default {

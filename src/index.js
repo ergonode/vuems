@@ -1,12 +1,10 @@
 /*
- * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
+ * Copyright © Ergonode Sp. z o.o. All rights reserved.
  * See LICENSE for license details.
  */
+
 import { info } from 'consola';
-import {
-    getModulesConfig,
-    prepareOptions,
-} from './helpers/tools';
+import { getModulesConfig, prepareOptions } from './helpers/tools';
 import beforeModules from './utils/beforeAll';
 import prepareModules from './utils/prepareModules';
 import initModules from './utils/initModules';

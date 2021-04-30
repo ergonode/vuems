@@ -1,11 +1,9 @@
 /*
- * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
+ * Copyright © Ergonode Sp. z o.o. All rights reserved.
  * See LICENSE for license details.
  */
-import {
-    name as NAME,
-    description as DESCRIPTION,
-} from '../../package';
+
+import { name as NAME, description as DESCRIPTION } from '../../package';
 
 /**
  * Module name
@@ -41,7 +39,8 @@ export const DIRECTORIES = {
  * @const {Object}
  */
 export const DEFAULTS = {
-    modules: { // modules list
+    modules: {
+        // modules list
         local: [],
         npm: [],
     },

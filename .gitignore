@@ -41,6 +41,7 @@ npm-debug.log
 yarn-error.log
 **/npm-debug.log
 .env
+package-lock.json
 
 # configurations
 # exclude everything

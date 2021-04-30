@@ -1,31 +1,32 @@
 /*
- * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
+ * Copyright © Ergonode Sp. z o.o. All rights reserved.
  * See LICENSE for license details.
  */
+
 import { resolve as resolvePath } from 'path';
 import deepmerge from 'deepmerge';
-import {
-    readFileSync,
-} from 'fs-extra';
+import { readFileSync } from 'fs-extra';
 import { findPaths, flattenDeep } from '../helpers/tools';
 import { log } from '../helpers/log';
 import { DIRECTORIES } from '../helpers/constants';
 
 /**
-* Register all routers from modules
-* @async
-* @function registerRouter
-* @param {Object} options - Module options
-* @param {Object} options.allModules - All active modules
-* @returns {Promise<string>}
-*/
+ * Register all routers from modules
+ * @async
+ * @function registerRouter
+ * @param {Object} options - Module options
+ * @param {Object} options.allModules - All active modules
+ * @returns {Promise<string>}
+ */
 async function registerRouter({ allModules, directories }) {
     const configDir = directories.config || DIRECTORIES.config;
-    const allRoutes = await Promise.all(findPaths({
-        modules: allModules,
-        suffix: configDir,
-        regExp: /routes\.js/,
-    }));
+    const allRoutes = await Promise.all(
+        findPaths({
+            modules: allModules,
+            suffix: configDir,
+            regExp: /routes\.js/,
+        }),
+    );
 
     await this.addTemplate({
         fileName: 'router.modules.js',
@@ -39,26 +40,28 @@ async function registerRouter({ allModules, directories }) {
 }
 
 /**
-* Register all extensions from modules
-* @async
-* @function registerExtends
-* @param {Object} options - Module options
-* @param {Object} options.allModules - All active modules
-* @returns {Promise<string>}
-*/
+ * Register all extensions from modules
+ * @async
+ * @function registerExtends
+ * @param {Object} options - Module options
+ * @param {Object} options.allModules - All active modules
+ * @returns {Promise<string>}
+ */
 async function registerExtends({ allModules, directories }) {
     const configDir = directories.config || DIRECTORIES.config;
-    const allExtends = await Promise.all(findPaths({
-        modules: allModules,
-        suffix: configDir,
-        regExp: /extends\.js/,
-    }));
+    const allExtends = await Promise.all(
+        findPaths({
+            modules: allModules,
+            suffix: configDir,
+            regExp: /extends\.js/,
+        }),
+    );
 
     await this.addTemplate({
         fileName: 'extends.modules.js',
         src: resolvePath(__dirname, '../templates/extends.ejs'),
         options: {
-            extend: flattenDeep(allExtends.filter(m => m !== null)),
+            extend: flattenDeep(allExtends.filter((m) => m !== null)),
         },
     });
     await this.addTemplate({
@@ -70,26 +73,28 @@ async function registerExtends({ allModules, directories }) {
 }
 
 /**
-* Register all middlewares from modules
-* @async
-* @function registerMiddleware
-* @param {Object} options - Module options
-* @param {Object} options.allModules - All active modules
-* @returns {Promise<string>}
-*/
+ * Register all middlewares from modules
+ * @async
+ * @function registerMiddleware
+ * @param {Object} options - Module options
+ * @param {Object} options.allModules - All active modules
+ * @returns {Promise<string>}
+ */
 async function registerMiddleware({ allModules, directories }) {
     const middlewareDir = directories.middleware || DIRECTORIES.middleware;
-    const allMiddleware = await Promise.all(findPaths({
-        modules: allModules,
-        suffix: middlewareDir,
-        regExp: /\.global\.js/,
-    }));
+    const allMiddleware = await Promise.all(
+        findPaths({
+            modules: allModules,
+            suffix: middlewareDir,
+            regExp: /\.global\.js/,
+        }),
+    );
 
     await this.addTemplate({
         fileName: 'middleware.modules.js',
         src: resolvePath(__dirname, '../templates/middleware.ejs'),
         options: {
-            middleware: flattenDeep(allMiddleware.filter(m => m !== null)),
+            middleware: flattenDeep(allMiddleware.filter((m) => m !== null)),
         },
     });
 
@@ -97,26 +102,28 @@ async function registerMiddleware({ allModules, directories }) {
 }
 
 /**
-* Register all vuex stores from modules
-* @async
-* @function registerStore
-* @param {Object} options - Module options
-* @param {Object} options.allModules - All active modules
-* @returns {Promise<string>}
-*/
+ * Register all vuex stores from modules
+ * @async
+ * @function registerStore
+ * @param {Object} options - Module options
+ * @param {Object} options.allModules - All active modules
+ * @returns {Promise<string>}
+ */
 async function registerStore({ allModules, directories }) {
     const storeDir = directories.store || DIRECTORIES.store;
-    const allStore = await Promise.all(findPaths({
-        modules: allModules,
-        suffix: storeDir,
-        regExp: /index\.js/,
-    }));
+    const allStore = await Promise.all(
+        findPaths({
+            modules: allModules,
+            suffix: storeDir,
+            regExp: /index\.js/,
+        }),
+    );
 
     await this.addTemplate({
         fileName: 'store.modules.js',
         src: resolvePath(__dirname, '../templates/store.ejs'),
         options: {
-            store: flattenDeep(allStore.filter(m => m !== null)),
+            store: flattenDeep(allStore.filter((m) => m !== null)),
         },
     });
 
@@ -124,26 +131,31 @@ async function registerStore({ allModules, directories }) {
 }
 
 /**
-* Register all i18n translations
-* @async
-* @function registerI18n
-* @param {Object} options - Module options
-* @param {Object} options.allModules - All active modules
-* @returns {string}
-*/
+ * Register all i18n translations
+ * @async
+ * @function registerI18n
+ * @param {Object} options - Module options
+ * @param {Object} options.allModules - All active modules
+ * @returns {string}
+ */
 async function registerI18n({ allModules, directories, i18n }) {
     const localesDir = directories.locales || DIRECTORIES.locales;
 
     i18n.forEach(async (lang) => {
         let i18nTmp = {};
-        const allTranslations = await Promise.all(findPaths({
-            modules: allModules,
-            suffix: localesDir,
-            regExp: new RegExp(`${lang}.json`, 'i'),
-        }));
+        const allTranslations = await Promise.all(
+            findPaths({
+                modules: allModules,
+                suffix: localesDir,
+                regExp: new RegExp(`${lang}.json`, 'i'),
+            }),
+        );
 
-        flattenDeep(allTranslations.filter(m => m !== null)).forEach((l) => {
-            i18nTmp = deepmerge(i18nTmp, JSON.parse(readFileSync(l.fullname, 'utf8')));
+        flattenDeep(allTranslations.filter((m) => m !== null)).forEach((l) => {
+            i18nTmp = deepmerge(
+                i18nTmp,
+                JSON.parse(readFileSync(l.fullname, 'utf8')),
+            );
         });
 
         await this.addTemplate({
@@ -159,11 +171,11 @@ async function registerI18n({ allModules, directories, i18n }) {
 }
 
 /**
-* Register main plugin with extensions
-* @async
-* @function registerPlugins
-* @returns {Promise<string>}
-*/
+ * Register main plugin with extensions
+ * @async
+ * @function registerPlugins
+ * @returns {Promise<string>}
+ */
 async function registerPlugins({ vuex }) {
     await this.addPlugin({
         fileName: 'plugin.modules.js',
@@ -180,12 +192,12 @@ async function registerPlugins({ vuex }) {
 }
 
 /**
-* Run actions after all modules are loaded
-* @function afterModules
-* @param {Object} moduleOptions - Module options
-* @param {Object} params - Data needed to load the module
-* @param {Object} params.options - VueMS initial options
-*/
+ * Run actions after all modules are loaded
+ * @function afterModules
+ * @param {Object} moduleOptions - Module options
+ * @param {Object} params - Data needed to load the module
+ * @param {Object} params.options - VueMS initial options
+ */
 export default async function afterModules({ options }) {
     const { verbose } = options;
     const promises = [
@@ -205,7 +217,7 @@ export default async function afterModules({ options }) {
     if (verbose) {
         log({
             header: 'After all modules',
-            logs: logs.filter(x => !!x),
+            logs: logs.filter((x) => !!x),
         });
     }
 }
