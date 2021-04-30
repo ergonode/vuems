@@ -1,7 +1,8 @@
 /*
- * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
+ * Copyright © Ergonode Sp. z o.o. All rights reserved.
  * See LICENSE for license details.
  */
+
 import theme from '@nuxt/content-theme-docs';
 
 export default theme({
