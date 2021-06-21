@@ -37,9 +37,9 @@ To build a **demo** we use the ready [CLI NuxtJS][nuxt-cli] library to build app
 <img src="demo/image/demo-start.png" alt="Start demo">
 
 **Project start up structure**
-<alert type="info" align="center">
+<p align="center">
       <img src="demo/image/demo-structure-init.png" alt="Init directory structure"/>
-</alert>
+</p>
 
 ## Install required libraries
 

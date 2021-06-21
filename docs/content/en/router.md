@@ -71,9 +71,9 @@ This is an auxiliary method used in the `router.js` file in the `createRouter` m
 Each module has its own routing.
 It must be added to the `routes.js` file of the `config` directory.
 
-<alert type="info" align="center">
+<p align="center">
       <img src="examples/module-router.png" alt="Module router">
-</alert>
+</p>
 
 ```javascript [@Dashboard/config/routes.js]
 import {

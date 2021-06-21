@@ -9,9 +9,9 @@ The second module will be called `About`.
 
 > All files to be added are located in the `src` directory.
 
-<alert type="info" align="center">
+<p align="center">
       <img src="demo/image/demo-about-module.png" alt="About module"/>
-</alert>
+</p>
 
 ## Initiate file
 
