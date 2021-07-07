@@ -10,7 +10,7 @@ The `Core` module will supervise every other module.
 > All files to be added are located in the `src` directory.
 
 <p align="center">
-      <img src="demo/image/demo-core-module.png" alt="Core module"/>
+      <article-image src="demo/image/demo-core-module.png" alt="Core module"/>
 </p>
 
 ## Initiate file

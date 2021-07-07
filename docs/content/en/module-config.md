@@ -398,9 +398,7 @@ export default {
 </alert>
 
 <p align="center">
-      <img src="examples/extend-vuex.png"
-    alt="Extend vuex store"
-    />
+      <article-image src="examples/extend-vuex.png" alt="Extend vuex store" />
 </p>
 
 <alert type="warning">

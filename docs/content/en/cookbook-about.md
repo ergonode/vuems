@@ -10,7 +10,7 @@ The second module will be called `About`.
 > All files to be added are located in the `src` directory.
 
 <p align="center">
-      <img src="demo/image/demo-about-module.png" alt="About module"/>
+      <article-image src="demo/image/demo-about-module.png" alt="About module"/>
 </p>
 
 ## Initiate file

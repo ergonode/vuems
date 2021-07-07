@@ -18,7 +18,7 @@ features:
 
 <p align="center">
   <a href="https://github.com/ergonode/vuems" target="_blank" rel="noopener noreferrer">
-    <img src="logo-bg.png" alt="VueMS logo with background">
+    <article-image src="logo-bg.png" alt="VueMS logo with background"/>
   </a>
 </p>
 
@@ -47,7 +47,7 @@ This gives us a rigid application built on specific principles.
 Structure of these parts is identical to the monolithic application, however each service can operate separately, communicate and interact with one another.<br>
 The services can have small mechanisms and very complex structures.
 
-<img src="preview.png" alt="Preview"/>
+<article-image src="preview.png" alt="Preview"/>
 
 ## Features
 

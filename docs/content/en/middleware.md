@@ -25,7 +25,7 @@ Global middleware has access to the full context.
 > Example path: `@Core/middleware/privilegeRoutingCheck.global.js`
 
 <p align="center">
-      <img src="examples/global-middleware.png" alt="Module router">
+      <article-image src="examples/global-middleware.png" alt="Module router"/>
 </p>
 
 ```javascript [@Core/middleware/privilegeRoutingCheck.global.js]

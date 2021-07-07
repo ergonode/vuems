@@ -1,6 +1,6 @@
 {
   "name": "vuems",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "private": true,
   "scripts": {
     "dev": "nuxt",
@@ -10,7 +10,7 @@
     "deploy": "push-dir --dir=dist --branch=docs --remote=upstream --cleanup"
   },
   "dependencies": {
-    "@nuxt/content-theme-docs": "^0.10.2",
+    "@nuxt/content-theme-docs": "^0.8.2",
     "nuxt": "^2.15.7"
   },
   "devDependencies": {

@@ -76,8 +76,8 @@ export function prepareSymlinks({ npmModules, vendorDir, nodeModulesDir }) {
             const files = await recursive.list(dst);
 
             await Promise.all(
-                files.map(({ fullname }) => chmod(fullname, 0o444)),
-            ); // files only to read
+                files.map(({ fullname }) => chmod(fullname, 0o644)),
+            );
         }
     });
 }

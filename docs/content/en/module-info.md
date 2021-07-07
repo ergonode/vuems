@@ -15,7 +15,7 @@ The most important thing is to keep the main files in the <code>src</code> direc
 </alert>
 
 <p align="center">
-      <img src="examples/module-structure.png" alt="Module structure">
+      <article-image src="examples/module-structure.png" alt="Module structure"/>
 </p>
 
 ## Types
@@ -115,7 +115,7 @@ If you want to change the default directory structure, you have to change it in 
     Directory with configuration under store are considered as store modules, with a name such as directory name.
 
 <p align="center">
-      <img src="examples/module-content.png" alt="i18n translations files">
+      <article-image src="examples/module-content.png" alt="i18n translations files"/>
 </p>
 
 
