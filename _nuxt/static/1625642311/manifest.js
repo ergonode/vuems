@@ -1,0 +1,1 @@
+__NUXT_JSONP__("manifest.js", {routes:["\u002Freleases","\u002F","\u002Foptions","\u002Fmodule-config","\u002Fsetup","\u002Fcookbook-preparation","\u002Ffaq","\u002Fcookbook-core","\u002Finit","\u002Fusage","\u002Frouter","\u002Fcookbook-modules","\u002Fmiddleware","\u002Fcookbook-about","\u002Fmodule-info"]})
