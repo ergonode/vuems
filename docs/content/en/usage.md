@@ -62,9 +62,10 @@ Create an `modules` directory to keep the modules in it.
 
 Directory should be located in the **root directory** of the project.
 
-<alert type="info" align="center">
-      <img src="examples/new_module_structure-desc.png" alt="Module structure">
-</alert>
+<p align="center">
+      <article-image src="examples/new_module_structure-desc.png" alt="Module structure"/>
+
+</p>
 
 <alert type="info">
   If you want change directory name, look <a href="/options#modulesdir" >here</a>.

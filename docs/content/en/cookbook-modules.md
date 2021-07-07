@@ -18,9 +18,9 @@ Directory should be located in the **root directory** of the project.
 
 After adding a directory, we **remove all** other directories except `layouts`, `static` and `middleware`.
 
-<alert type="info" align="center">
-      <img src="demo/image/demo-clean-structure.png" alt="Clean structure"/>
-</alert>
+<p align="center">
+      <article-image src="demo/image/demo-clean-structure.png" alt="Clean structure"/>
+</p>
 
 ## Create modules
 
@@ -33,9 +33,9 @@ It is useful for keeping order when publishing modules to **npm**.
 
 For this demo we've created two scoped directories : `@example` and `@example2`.
 
-<alert type="info" align="center">
-      <img src="demo/image/demo-module-scopes.png" alt="Module scopes"/>
-</alert>
+<p align="center">
+      <article-image src="demo/image/demo-module-scopes.png" alt="Module scopes"/>
+</p>
 
 ### Create module directory
 
@@ -47,9 +47,9 @@ The modules have a `src` directory and files that make it easier to publish the 
 
 Create a structure as in the example below.
 
-<alert type="info" align="center">
-      <img src="demo/image/demo-modules-structure.png" alt="Module structure"/>
-</alert>
+<p align="center">
+      <article-image src="demo/image/demo-modules-structure.png" alt="Module structure"/>
+</p>
 
 #### `package.json`
 

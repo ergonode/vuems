@@ -397,11 +397,9 @@ export default {
   We recommend that you use the <code>extends</code> directory.
 </alert>
 
-<alert type="info" align="center">
-      <img src="examples/extend-vuex.png"
-    alt="Extend vuex store"
-    />
-</alert>
+<p align="center">
+      <article-image src="examples/extend-vuex.png" alt="Extend vuex store" />
+</p>
 
 <alert type="warning">
   If you create the <code>store</code> directory on the module root and place a <a href="https://vuex.vuejs.org/" target="_blank">Vuex store</a> with an existing name in it, it will be replaced (The order of loading the modules is important).

@@ -14,9 +14,9 @@ The most important thing is to keep the main files in the <code>src</code> direc
 
 </alert>
 
-<alert type="info" align="center">
-      <img src="examples/module-structure.png" alt="Module structure">
-</alert>
+<p align="center">
+      <article-image src="examples/module-structure.png" alt="Module structure"/>
+</p>
 
 ## Types
 
@@ -114,9 +114,9 @@ If you want to change the default directory structure, you have to change it in 
     The store directory contains Vuex Store files.<br>
     Directory with configuration under store are considered as store modules, with a name such as directory name.
 
-<alert type="info" align="center">
-      <img src="examples/module-content.png" alt="i18n translations files">
-</alert>
+<p align="center">
+      <article-image src="examples/module-content.png" alt="i18n translations files"/>
+</p>
 
 
 [npm]: https://www.npmjs.com/

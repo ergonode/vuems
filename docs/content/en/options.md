@@ -172,10 +172,10 @@ If **i18n plugin** is used then set array with translations keys used in the app
 
 <alert type="info">
     The translator keys are closely related to the translator file names.
-    <p align="center">
-      <img src="examples/i18n-translations.png" alt="i18n translations files">
-    </p>
 </alert>
+<p align="center">
+  <article-image src="examples/i18n-translations.png" alt="i18n translations files"/>
+</p>
 
 ## `isDev`
 

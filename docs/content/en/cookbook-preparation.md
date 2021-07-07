@@ -23,23 +23,21 @@ To build a **demo** we use the ready [CLI NuxtJS][nuxt-cli] library to build app
 ```bash
   npx create-nuxt-app vuems-demo
 ```
-<video playsinline controls muted>
-  <source src="demo/video/nuxt-install-process.mov" type="video/mp4" />
-</video>
+
+<article-video src="video/nuxt-install-process.mp4"></article-video>
 
 ### Launch project
 
-<video playsinline controls muted>
-  <source src="demo/video/nuxt-server-start.mov" type="video/mp4" />
-</video>
+
+<article-video src="video/nuxt-server-start.mp4"></article-video>
 
 **Preview**
-<img src="demo/image/demo-start.png" alt="Start demo">
+<article-image src="demo/image/demo-start.png" alt="Start demo" />
 
 **Project start up structure**
-<alert type="info" align="center">
-      <img src="demo/image/demo-structure-init.png" alt="Init directory structure"/>
-</alert>
+<p align="center">
+      <article-image src="demo/image/demo-structure-init.png" alt="Init directory structure"/>
+</p>
 
 ## Install required libraries
 
