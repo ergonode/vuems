@@ -5,6 +5,7 @@
 
 import { join } from 'path';
 import { log } from '../helpers/log';
+import { DEFAULT_ORDER } from '../helpers/constants';
 
 /**
  * Check modules relations
@@ -42,22 +43,18 @@ function checkModulesRelations({ configurations }) {
  * @returns {Promise<string>}
  */
 async function setAliases(configurations, { allModules }) {
+    const setOrder = (data) => ({
+        ...data,
+        order: data.order || DEFAULT_ORDER,
+    });
+    const sortByOrder = (a, b) => b.order - a.order;
+    const sortedConfigurations = configurations.map(setOrder).sort(sortByOrder);
+
     await this.extendBuild((config) => {
         const alias = config.resolve.alias || {};
 
-        configurations.forEach((configuration) => {
+        sortedConfigurations.forEach((configuration) => {
             const { name } = configuration;
-
-            if (configuration.aliases) {
-                const { aliases } = configuration;
-
-                Object.keys(aliases).forEach((key) => {
-                    alias[key] = join(
-                        allModules.find((m) => m.name === name).path,
-                        aliases[key],
-                    ).replace(/\/$/g, '');
-                });
-            }
 
             if (configuration.replacements) {
                 const { replacements } = configuration;
@@ -66,6 +63,16 @@ async function setAliases(configurations, { allModules }) {
                     alias[key] = join(
                         allModules.find((m) => m.name === name).path,
                         replacements[key],
+                    ).replace(/\/$/g, '');
+                });
+            }
+            if (configuration.aliases) {
+                const { aliases } = configuration;
+
+                Object.keys(aliases).forEach((key) => {
+                    alias[key] = join(
+                        allModules.find((m) => m.name === name).path,
+                        aliases[key],
                     ).replace(/\/$/g, '');
                 });
             }

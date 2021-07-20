@@ -4,6 +4,7 @@
  */
 
 import { log } from '../helpers/log';
+import { DEFAULT_ORDER } from '../helpers/constants';
 
 /**
  * Load modules from path
@@ -16,7 +17,7 @@ import { log } from '../helpers/log';
 function loadModules({ modules, options, configurations }) {
     const setOrder = (data) => ({
         ...data,
-        order: configurations.find((m) => m.name === data.name).order || 1000,
+        order: configurations.find((m) => m.name === data.name).order || DEFAULT_ORDER,
     });
     const sortByOrder = (a, b) => a.order - b.order;
     const loadModule = async ({ name, path }) => {

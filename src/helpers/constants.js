@@ -6,6 +6,12 @@
 import { name as NAME, description as DESCRIPTION } from '../../package';
 
 /**
+ * Default order
+ * @const {number}
+ */
+export const DEFAULT_ORDER = 1000;
+
+/**
  * Module name
  * @const {string}
  */
