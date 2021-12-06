@@ -10,8 +10,10 @@ import extendsModules from '~/.nuxt/extends.modules';
 
 export default ({ app }, inject) => {
     const extendMethods = {};
-    const extendComponents = Object.values(extendsModules)
-        .reduce((acc, current) => deepmerge(acc, current.extendComponents || {}), {});
+    const extendComponents = Object.values(extendsModules).reduce(
+        (acc, current) => deepmerge(acc, current.extendComponents || {}),
+        {},
+    );
 
     Object.values(extendsModules).forEach((extendContent) => {
         if (extendContent.extendMethods) {
@@ -21,16 +23,20 @@ export default ({ app }, inject) => {
                         extendContent.extendMethods[extendName],
                     ];
                 } else {
-                    extendMethods[extendName].push(extendContent.extendMethods[extendName]);
+                    extendMethods[extendName].push(
+                        extendContent.extendMethods[extendName],
+                    );
                 }
             });
         }
     });
 
-    inject('getExtendSlot', key => extendComponents[key] || {});
+    inject('getExtendSlot', (key) => extendComponents[key] || {});
     inject('getExtendMethod', async (key, payload) => {
         if (extendMethods[key]) {
-            const methods = await Promise.all(extendMethods[key].map(method => method(payload)));
+            const methods = await Promise.all(
+                extendMethods[key].map((method) => method(payload)),
+            );
 
             return methods;
         }

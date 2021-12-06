@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /*
  * Copyright © Bold Brand Commerce Sp. z o.o. All rights reserved.
  * See LICENSE for license details.
@@ -5,6 +6,33 @@
 
 import extendsModules from '~/.nuxt/extends.modules';
 import routerModules from '~/.nuxt/router.modules';
+
+function findExtendByName(name) {
+    return Object.values(extendsModules).reduce((acc, current) => {
+        let tmpArray = acc;
+
+        if (current[name]) {
+            tmpArray = [...acc, ...current[name]];
+        }
+        return tmpArray;
+    }, []);
+}
+
+export function replaceRoutes() {
+    const replaceRouteByName = findExtendByName('replaceRoutes');
+    const extendedRoutes = [].concat(...Object.values(routerModules));
+
+    for (let i = 0; i < replaceRouteByName.length; i += 1) {
+        const { name, routes } = replaceRouteByName[i];
+        const index = extendedRoutes.findIndex((e) => e.name === name);
+
+        if (index !== -1) {
+            extendedRoutes[index] = routes;
+        }
+    }
+
+    return extendedRoutes;
+}
 
 function middlewarePipeline({ context, middleware, index }) {
     const nextMiddleware = middleware[index];
@@ -15,7 +43,9 @@ function middlewarePipeline({ context, middleware, index }) {
 
     return () => {
         const nextPipeline = middlewarePipeline({
-            context, middleware, index: index + 1,
+            context,
+            middleware,
+            index: index + 1,
         });
 
         nextMiddleware({
@@ -25,15 +55,11 @@ function middlewarePipeline({ context, middleware, index }) {
     };
 }
 
-export function setLocalMiddlewares({
-    to, from, next, ...context
-}) {
+export function setLocalMiddlewares({ to, from, next, ...context }) {
     if (!to.meta.middleware) {
         return next();
     }
-    const {
-        middleware,
-    } = to.meta;
+    const { middleware } = to.meta;
     const ctx = {
         to,
         from,
@@ -48,34 +74,23 @@ export function setLocalMiddlewares({
 }
 
 export function extendRoutes(routerLocal = []) {
-    const extendRoutesChildren = Object.values(extendsModules)
-        .reduce((acc, current) => {
-            let connectedArray = acc;
-
-            if (current.extendRoutesChildren) {
-                connectedArray = [
-                    ...acc,
-                    ...current.extendRoutesChildren,
-                ];
-            }
-            return connectedArray;
-        }, []);
-    const extendedRoutes = [].concat(...Object.values(routerModules), routerLocal);
+    const extendRoutesChildren = findExtendByName('extendRoutesChildren');
+    const extendedRoutes = [].concat(
+        ...Object.values(replaceRoutes()),
+        routerLocal,
+    );
 
     for (let i = 0; i < extendRoutesChildren.length; i += 1) {
-        const index = extendedRoutes.findIndex(e => e.name === extendRoutesChildren[i].name);
+        const index = extendedRoutes.findIndex(
+            (e) => e.name === extendRoutesChildren[i].name,
+        );
 
         if (index !== -1) {
-            const {
-                children = [],
-            } = extendedRoutes[index];
+            const { children = [] } = extendedRoutes[index];
 
             extendedRoutes[index] = {
                 ...extendedRoutes[index],
-                children: [
-                    ...children,
-                    ...extendRoutesChildren[i].children,
-                ],
+                children: [...children, ...extendRoutesChildren[i].children],
             };
         }
     }
@@ -91,7 +106,9 @@ export function scrollBehavior(to, from, savedPosition) {
             x: 0,
             y: 0,
         };
-    } else if (to.matched.some(r => r.components.default.options.scrollToTop)) {
+    } else if (
+        to.matched.some((r) => r.components.default.options.scrollToTop)
+    ) {
         position = {
             x: 0,
             y: 0,
