@@ -3,6 +3,7 @@
  * See LICENSE for license details.
  */
 /* eslint-disable no-await-in-loop */
+/* eslint-disable no-param-reassign */
 
 import deepmerge from 'deepmerge';
 import extendsModules from '~/.nuxt/extends.modules';
@@ -24,25 +25,30 @@ export default async ({ app }) => {
 
     await asyncForEach(Object.values(extendsModules), async (extendContent) => {
         if (extendContent.extendStore) {
-            await asyncForEach(Object.keys(extendContent.extendStore), async (extendName) => {
-                const tmpStore = {};
-                const storeContent = await extendContent.extendStore[extendName]();
+            await asyncForEach(
+                Object.keys(extendContent.extendStore),
+                async (extendName) => {
+                    const tmpStore = {};
+                    const storeContent = await extendContent.extendStore[
+                        extendName
+                    ]();
 
-                Object.keys(storeKeys).forEach((key) => {
-                    if (storeContent[key]) {
-                        if (key === 'state') {
-                            tmpStore[key] = storeContent[key]();
-                        } else {
-                            tmpStore[key] = storeContent[key];
+                    Object.keys(storeKeys).forEach((key) => {
+                        if (storeContent[key]) {
+                            if (key === 'state') {
+                                tmpStore[key] = storeContent[key]();
+                            } else {
+                                tmpStore[key] = storeContent[key];
+                            }
                         }
-                    }
-                });
+                    });
 
-                extendedStore[extendName] = deepmerge(
-                    extendedStore[extendName] || {},
-                    tmpStore,
-                );
-            });
+                    extendedStore[extendName] = deepmerge(
+                        extendedStore[extendName] || {},
+                        tmpStore,
+                    );
+                },
+            );
         }
     });
 
@@ -50,8 +56,10 @@ export default async ({ app }) => {
         actions: {
             resetState({ dispatch }) {
                 Object.keys(storeModules).forEach((storeName) => {
-                    if (app.store._actions[`${storeName}/__clearStorage`]
-                            && app.store._actions[`${storeName}/__clearStorage`].length) {
+                    if (
+                        app.store._actions[`${storeName}/__clearStorage`] &&
+                        app.store._actions[`${storeName}/__clearStorage`].length
+                    ) {
                         dispatch(`${storeName}/__clearStorage`);
                     }
                 });
@@ -60,7 +68,8 @@ export default async ({ app }) => {
     });
 
     Object.keys(storeModules).forEach((storeName) => {
-        const moduleIsRegistered = app.store._modules.root._children[storeName] !== undefined;
+        const moduleIsRegistered =
+            app.store._modules.root._children[storeName] !== undefined;
         const stateExists = app.store.state[storeName];
         let states = storeModules[storeName].state();
 
@@ -92,31 +101,35 @@ export default async ({ app }) => {
 
         // DEFAULT VUEX METHODS
         // MUTATIONS
-        storeModules[storeName].mutations.__CLEAR_STORAGE = function __CLEAR_STORAGE(state) {
-            Object.keys(states).forEach((key) => {
-                state[key] = states[key];
-            });
-        };
-        storeModules[storeName].mutations.__SET_STATE = function __SET_STATE(state, {
-            key, value,
-        }) {
+        storeModules[storeName].mutations.__CLEAR_STORAGE =
+            function __CLEAR_STORAGE(state) {
+                Object.keys(states).forEach((key) => {
+                    state[key] = states[key];
+                });
+            };
+        storeModules[storeName].mutations.__SET_STATE = function __SET_STATE(
+            state,
+            { key, value },
+        ) {
             state[key] = value;
         };
 
         // ACTIONS
-        storeModules[storeName].actions.__clearStorage = function __clearStorage({ commit }) {
-            commit('__CLEAR_STORAGE');
-        };
-        storeModules[storeName].actions.__setState = function __setState({ commit }, payload) {
+        storeModules[storeName].actions.__clearStorage =
+            function __clearStorage({ commit }) {
+                commit('__CLEAR_STORAGE');
+            };
+        storeModules[storeName].actions.__setState = function __setState(
+            { commit },
+            payload,
+        ) {
             commit('__SET_STATE', payload);
         };
 
         if (!moduleIsRegistered) {
-            app.store.registerModule(
-                storeName,
-                storeModules[storeName],
-                { preserveState: stateExists },
-            );
+            app.store.registerModule(storeName, storeModules[storeName], {
+                preserveState: stateExists,
+            });
         }
     });
 };

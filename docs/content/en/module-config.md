@@ -311,15 +311,55 @@ Sometimes you need to replace certain elements or add some to already existing s
 In order not to modify existing modules, **VueMS library** provides a solution to easily extend already existing mechanisms.
 Thanks to it we have a lot of possibilities to extend modules from other modules.
 
-In order to add any extensions you need to create an `extend.js` file
+In order to add any extensions you need to create an `extends.js` file
 and use specific properties in it depending on what you want to achieve.
 
 
 <alert type="info">
-  You don't need to create an <code>extend.js</code>  file if you don't want to extend anything
+  You don't need to create an <code>extends.js</code>  file if you don't want to extend anything
 </alert>
 
 #### Properties:
+---
+
+* `replaceRoutes`
+    - Type: `Array`
+
+This functionality allows you to replace a routing page by his name.
+The mechanism is based on routing and extends existing routing.
+
+**`replaceRoutes`:**<br>
+    - `name` - existing router name what we want replace,<br>
+    - `routes` - new routing to replace,<br>
+
+```javascript [@Products/config/extends.js]
+export default {
+    replaceRoutes: [
+        {
+            name: 'products',
+            routes: {
+                name: 'products-new',
+                path: '/new-products',
+                component: Tabs.Product,
+                meta: {
+                    title: 'New Products',
+                    visible: false,
+                    breadcrumbs: [
+                        {
+                            title: 'New Products',
+                            icon: Icons.Product,
+                        },
+                    ],
+                    privileges: [],
+                },
+            },
+        },
+    ],
+};
+```
+<alert type="info">
+  The extended routing <b>must exist</b>. The mechanism substitutes all routing with the given name. <br>First the routing is replaced and then extended (<code>extendRoutesChildren</code>), so if a routing is added to the given name, it will be added correctly.
+</alert>
 
 ---
 
