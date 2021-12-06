@@ -4,7 +4,7 @@
  */
 
 import { resolve as resolvePath, join as joinPath } from 'path';
-import recursive from 'recursive-readdir-async';
+import { list } from 'recursive-readdir-async'
 import { existsSync, remove, ensureSymlink, chmod } from 'fs-extra';
 import { success } from 'consola';
 import { DEFAULTS, DIRECTORIES } from './constants';
@@ -46,7 +46,7 @@ export function findPaths({ modules, suffix, regExp }) {
         const fullPath = joinPath(path, suffix);
 
         if (existsSync(fullPath)) {
-            const files = await recursive.list(fullPath);
+            const files = await list(fullPath);
 
             return (
                 files.filter(({ fullname }) => regExp.test(fullname)) || null
@@ -73,7 +73,7 @@ export function prepareSymlinks({ npmModules, vendorDir, nodeModulesDir }) {
         if (existsSync(src)) {
             await remove(dst);
             await ensureSymlink(src, dst, 'junction');
-            const files = await recursive.list(dst);
+            const files = await list(dst);
 
             await Promise.all(
                 files.map(({ fullname }) => chmod(fullname, 0o644)),
