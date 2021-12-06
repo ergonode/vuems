@@ -91,28 +91,30 @@ async function setAliases(configurations, { allModules }) {
  * @returns {Promise<string>}
  */
 async function setPlugins(configurations, { allModules }) {
-    return new Promise((resolve) => {
-        configurations.forEach((configuration) => {
-            if (configuration.plugins) {
-                const { name, plugins } = configuration;
+    await Promise.all(
+        configurations
+            .filter((configuration) => configuration.plugins)
+            .map(({ name, plugins }) => {
                 const moduleName = name.replace(/[^a-zA-Z]/g, '');
 
-                plugins.forEach(async ({ ssr, src }) => {
+                return plugins.map(({ ssr, src }) => {
                     const pluginPath = join(
                         allModules.find((m) => m.name === name).path,
                         src,
                     ).replace(/\/$/g, '');
 
-                    await this.addPlugin({
+                    return this.addPlugin({
                         src: `${pluginPath}.js`,
                         fileName: join('modules', moduleName, `${src}.js`),
-                        ssr,
+                        options: {
+                            mode: ssr ? 'server' : 'client',
+                        },
                     });
                 });
-            }
-        });
-        resolve('All plugins set');
-    });
+            }),
+    );
+
+    return 'All plugins set';
 }
 
 /**
