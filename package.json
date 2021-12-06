@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A simple mechanism to transform a monolithic Vue application into an application based on Micro Services architecture.",
   "author": "Bletek Piotr <p.bletek@gmail.com>",
-  "license": "OSL",
+  "license": "OSL-3.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/ergonode/vuems.git"
@@ -31,11 +31,16 @@
     "src/*"
   ],
   "keywords": [
+    "javascript",
     "node",
     "npm",
     "vue",
+    "vuejs",
     "nuxt",
-    "micro services"
+    "nuxtjs",
+    "micro services",
+    "micro frontend",
+    "framework"
   ],
   "dependencies": {
     "consola": "^2.15.3",
