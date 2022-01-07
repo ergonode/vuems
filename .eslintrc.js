@@ -5,16 +5,27 @@
 
 module.exports = {
     env: {
+        browser: true,
         es6: true,
         node: true,
     },
-    parser: 'babel-eslint',
+    parser: '@babel/eslint-parser',
     parserOptions: {
         sourceType: 'module',
         allowImportExportEverywhere: false,
+        requireConfigFile: false,
+        ecmaFeatures: {
+            jsx: true,
+            modules: true,
+        },
     },
-    plugins: ['notice', 'prettier'],
+    plugins: ['react', 'react-hooks', 'notice', 'prettier'],
     extends: ['airbnb', 'prettier'],
+    settings: {
+        react: {
+            version: '17.0.2',
+        },
+    },
     rules: {
         'prettier/prettier': [
             'error',

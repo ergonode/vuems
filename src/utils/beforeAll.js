@@ -94,11 +94,11 @@ function checkRequiredModules({ allModules, required }) {
  */
 export default async function beforeModules({ options }) {
     const { verbose } = options;
-    const logs = await Promise.all([
-        symlinksCreator(options),
-        checkDirectories(options),
-        checkRequiredModules(options),
-    ]);
+    const logs = [];
+
+    logs.push(await symlinksCreator(options));
+    logs.push(await checkDirectories(options));
+    logs.push(await checkRequiredModules(options));
 
     if (verbose) {
         log({

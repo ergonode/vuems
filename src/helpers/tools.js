@@ -4,7 +4,7 @@
  */
 
 import { resolve as resolvePath, join as joinPath } from 'path';
-import { list } from 'recursive-readdir-async'
+import { list } from 'recursive-readdir-async';
 import { existsSync, remove, ensureSymlink, chmod } from 'fs-extra';
 import { success } from 'consola';
 import { DEFAULTS, DIRECTORIES } from './constants';
