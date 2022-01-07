@@ -17,7 +17,9 @@ import { DEFAULT_ORDER } from '../helpers/constants';
 function loadModules({ modules, options, configurations }) {
     const setOrder = (data) => ({
         ...data,
-        order: configurations.find((m) => m.name === data.name).order || DEFAULT_ORDER,
+        order:
+            configurations.find((m) => m.name === data.name).order ||
+            DEFAULT_ORDER,
     });
     const sortByOrder = (a, b) => a.order - b.order;
     const loadModule = async ({ name, path }) => {
